@@ -1,3 +1,10 @@
+""" 
+Fusion cam from multiples layers 
+
+References http://mftp.mmcheng.net/Papers/21TIP_LayerCAM.pdf
+"""
+
+
 import numpy as np 
 from tqdm import tqdm 
 
