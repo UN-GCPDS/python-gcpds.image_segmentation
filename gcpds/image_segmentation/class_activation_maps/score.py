@@ -4,7 +4,7 @@ Score for semantic segmentation models to use tf-keras-vis.
 
 
 import tensorflow as tf
-import matplotlib.pyplot as plt 
+from tensorflow.keras.backend import epsilon
 
 
 class SegScore:
@@ -31,7 +31,7 @@ class SegScore:
         
         masked_scores = class_mask*class_pred
         N = tf.reduce_sum(class_mask,axis=[-1,-2,-3])
-        mean_scores = tf.reduce_sum(masked_scores, axis=[-1,-2,-3])/N
+        mean_scores = tf.reduce_sum(masked_scores, axis=[-1,-2,-3])/(N+epsilon())
         return mean_scores
 
     @staticmethod

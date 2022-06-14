@@ -3,8 +3,9 @@ Average drop and average inclrease metrics
 """
 
 
-import numpy as np 
-import tensorflow as tf 
+import numpy as np
+import tensorflow as tf
+from tensorflow.keras.backend import epsilon
 
 
 class AveragesCam:
@@ -23,7 +24,7 @@ class AveragesCam:
 
     def average_drop(self, cams: tf.Tensor, score_function: 'score function') -> float:
         Y_c, O_c = self.__get_scores(cams, score_function)
-        return np.mean(np.maximum(0,(Y_c-O_c))/Y_c)*100
+        return np.mean(np.maximum(0,(Y_c-O_c))/(Y_c+epsilon()))*100
 
     def average_increase(self, cams: tf.Tensor, score_function: 'score function') -> float:
         Y_c, O_c = self.__get_scores(cams, score_function)
