@@ -10,23 +10,54 @@ from tensorflow.keras.backend import epsilon
 class SegScore:
     """
     Score for semantic segmentation models to use tf-keras-vis.
+
+    Attributes
+    ----------
+    target_mask : tf.Tensor
+        Masks of the interest regions
+    target_class : int 
+        Label or channel of the interest class.
+
     """
-    def __init__(self, target_mask: tf.Tensor, class_channel: int = 0) -> None:
+
+    def __init__(self, target_mask: tf.Tensor, target_class: int = 0) -> None:
+        """
+        Parameters
+        ----------
+        target_mask : 
+            Masks of the interest regions
+        target_class : 
+            Label or channel of the interest class.
+
+        """
         self.target_mask = self.__sparse(target_mask)
-        self.class_channel = class_channel
+        self.target_class = target_class
 
     def __call__(self, pred: tf.Tensor) -> tf.Tensor:
+        """ Calculate scores 
+
+        Parameters
+        ----------
+        pred : 
+            Predictions (masks) of a tf.keras.Model
+
+        Returns
+        -------
+        tuple 
+            Score per instances 
+
+        """
         channels = pred.shape[-1]
 
-        class_mask = self.target_mask == self.class_channel
+        class_mask = self.target_mask == self.target_class
         class_mask = tf.cast(class_mask,tf.float32)
 
         class_pred = pred
         if channels != 1:
-            class_pred = class_pred[...,self.class_channel]
+            class_pred = class_pred[...,self.target_class]
             class_pred = class_pred[...,None]
         else: 
-            if self.class_channel == 0:
+            if self.target_class == 0:
                 class_pred = 1-class_pred
         
         masked_scores = class_mask*class_pred
@@ -36,6 +67,9 @@ class SegScore:
 
     @staticmethod
     def __sparse(masks: tf.Tensor) -> tf.Tensor:
+        """ Ensures target class be sparse 
+
+        """
         channels = masks.shape[-1]
         if channels == 1:
             return masks 
