@@ -55,8 +55,8 @@ class AveragesCam:
         cams = cams[...,None]
         inputs = self.inputs*cams
         O_c = self.model.predict(inputs)
-        O_c = score_function(O_c)
-        Y_c = score_function(self.Y_c)
+        O_c = np.array(score_function(O_c))
+        Y_c = np.array(score_function(self.Y_c))
         return Y_c, O_c
 
     def average_drop(self, cams: tf.Tensor, score_function: Callable) -> float:

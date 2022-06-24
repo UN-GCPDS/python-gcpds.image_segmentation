@@ -11,18 +11,18 @@ import numpy as np
 from typing import Callable, Iterable
 
 
-def __cumulative_maximun() -> Callable:
+def _cumulative_maximun() -> Callable:
     """ Accumulation of the maximum
     """
 
-    flag_start = False 
+    has_started = False 
     result = None 
 
     def maximun(input_ : np.array)  -> np.array:
-        nonlocal flag_start, result
+        nonlocal has_started, result
         
-        if not flag_start:
-            flag_start = True 
+        if not has_started:
+            has_started = True 
             result = input_
 
         result = result[...,None]
@@ -57,7 +57,7 @@ def fusion_cam(callable_cam : Callable, images : np.array,
         Result fusion of the CAMs at multiple layers.
     
     """
-    maximun = __cumulative_maximun()
+    maximun = _cumulative_maximun()
 
     layers = tqdm(layers)
     for layer in layers:

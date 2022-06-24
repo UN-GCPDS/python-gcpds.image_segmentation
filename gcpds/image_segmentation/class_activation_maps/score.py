@@ -62,7 +62,8 @@ class SegScore:
         
         masked_scores = class_mask*class_pred
         N = tf.reduce_sum(class_mask,axis=[-1,-2,-3])
-        mean_scores = tf.reduce_sum(masked_scores, axis=[-1,-2,-3])/(N+epsilon())
+        sum_scores = tf.reduce_sum(masked_scores, axis=[-1,-2,-3])
+        mean_scores = sum_scores/(N+epsilon())
         return mean_scores
 
     @staticmethod
