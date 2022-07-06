@@ -18,9 +18,7 @@ setup(
 
     download_url='',
 
-    install_requires=['tensorflow>=2.8',
-                     'tf-keras-vis @ git+https://github.com/UN-GCPDS/tf-keras-vis.git'
-       
+    install_requires=['tensorflow>=2.8',       
     ],
 
     include_package_data=True,
