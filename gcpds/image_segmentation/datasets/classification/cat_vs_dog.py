@@ -40,7 +40,7 @@ class CatsVsDogs:
         print("Deleted %d images" % num_skipped)
 
 
-    def load_data(self,batch_size,validation_split=0.3):
+    def load_data(self,batch_size,validation_split=0.2):
         path = os.path.join(self.__dirname,"PetImages")
         train_ds = image_dataset_from_directory(path,
                                                 validation_split=validation_split,
