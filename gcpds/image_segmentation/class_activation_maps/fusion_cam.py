@@ -1,6 +1,5 @@
 """ 
 Fusion cam from multiples layers 
-
 References http://mftp.mmcheng.net/Papers/21TIP_LayerCAM.pdf
 """
 
@@ -39,7 +38,6 @@ def fusion_cam(callable_cam : Callable, images : np.array,
                 score_function : Callable, layers : Iterable) -> np.array:
 
     """ Fusion CAM from multiple layers without scaling just maximun.
-
     Parameters
     ----------
     callable_cam :
@@ -50,7 +48,6 @@ def fusion_cam(callable_cam : Callable, images : np.array,
         Same score function used to calculate the CAMs in tf-keras-vis.
     layers :
         Layers where obtain the CAMs.
-
     Returns
     -------
     np.array 
@@ -64,6 +61,10 @@ def fusion_cam(callable_cam : Callable, images : np.array,
         layers.set_postfix({'Layer ':layer})
         cam = callable_cam(score_function, images, penultimate_layer=layer,
                             seek_penultimate_conv_layer=False)
-        cam = maximun(cam)
+        
+        if type(cam) is list:
+            cam = [maximun(i) for i in cam]
+        else:
+            cam = maximun(cam)
     
     return cam 
