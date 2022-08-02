@@ -108,4 +108,3 @@ class AveragesCam:
         """
         Y_c, O_c = self._get_scores(cams, score_function)
         return 100*np.mean(Y_c < O_c)
-
