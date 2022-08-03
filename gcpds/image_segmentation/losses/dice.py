@@ -1,6 +1,9 @@
 """
-https://github.com/cralji/RFF-Nerve-UTP
-https://stats.stackexchange.com/questions/285640/multi-categorical-dice-loss
+* https://github.com/cralji/RFF-Nerve-UTP
+* https://stats.stackexchange.com/questions/285640/multi-categorical-dice-loss
+* "It is also preferable to return a tensor containing one loss per instance, rather
+than returning the mean loss. This way, Keras can apply class weights or sample
+weights when requested" - Hands on machine learning with Scikit-Learn and TensorFlow
 """
 
 from tensorflow.keras.losses import Loss
@@ -13,8 +16,9 @@ class DiceCoeficiente(Loss):
         super().__init__(**kwargs)
 
     def call(self, y_true, y_pred):
-        intersection = K.sum(y_true * y_pred)
-        return -(2. * intersection + self.smooth) / (K.sum(y_true) + K.sum(y_pred) + self.smooth)
+        intersection = K.sum(y_true * y_pred, axis=[1,2,3])
+        union = K.sum(y_true,axis=[1,2,3]) + K.sum(y_pred,axis=[1,2,3])
+        return -(2. * intersection + self.smooth) /(union + self.smooth)
 
     def get_config(self,):
         base_config = super().get_config()

@@ -25,9 +25,9 @@ class Jaccard(Metric):
         return self.total/self.count 
 
     def jaccard(self, y_true, y_pred):
-        intersection = K.sum(y_true * y_pred)
-        sum_ = K.sum(y_true) + K.sum(y_pred)
-        return (intersection + self.smooth) / (sum_ - intersection + self.smooth)
+        intersection = K.sum(y_true * y_pred, axis=[1,2,3])
+        union = K.sum(y_true, axis=[1,2,3]) + K.sum(y_pred, axis=[1,2,3])
+        return (intersection + self.smooth) / (union - intersection + self.smooth)
     
     def get_config(self,):
         base_config = super().get_config()

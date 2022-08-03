@@ -31,7 +31,7 @@ class Sensitivity(Metric):
         true_positves = K.sum(y_true*y_pred,axis=[1,2,3])
         total_positives = K.sum(y_true,axis=[1,2,3])
    
-        return tf.reduce_mean(true_positves / (total_positives + K.epsilon()))
+        return true_positves / (total_positives + K.epsilon())
     
     def get_config(self,):
         base_config = super().get_config()
