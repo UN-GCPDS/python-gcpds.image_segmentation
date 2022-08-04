@@ -29,7 +29,7 @@ def fcn_baseline(input_shape=(128,128,3), name='FCN', out_channels=1):
     # Encoder 
     input_ = layers.Input(shape=input_shape)
 
-    x =  layers.BatchNormalization(name='Batch=00')(input_)
+    x =  layers.BatchNormalization(name='Batch00')(input_)
     
     x =  DefaultConv2D(32,kernel_initializer=kernel_initializer(34),name='Conv10')(x)
     x =  DefaultConv2D(32,kernel_initializer=kernel_initializer(4),name='Conv11')(x)
