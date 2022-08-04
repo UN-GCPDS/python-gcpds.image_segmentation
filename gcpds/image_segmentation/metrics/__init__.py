@@ -1,6 +1,4 @@
-from .jaccard import Jaccard
-from .jaccard import SparseCategoricalJaccard
-from .sensitivity import Sensitivity
-from .sensitivity import SparseCategoricalSensitivity
-from .specificity import Specificity
-from .specificity import SparseCategoricalSpecificity
+from .dice import DiceCoeficiente, SparseCategoricalDiceCoeficiente
+from .jaccard import Jaccard, SparseCategoricalJaccard
+from .sensitivity import Sensitivity, SparseCategoricalSensitivity
+from .specificity import SparseCategoricalSpecificity, Specificity
