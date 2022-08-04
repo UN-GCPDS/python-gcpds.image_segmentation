@@ -11,8 +11,8 @@ from .sensitivity import Sensitivity
 
 class Specificity(Metric):
 
-    def __init__(self,**kwargs):
-        super().__init__(**kwargs)
+    def __init__(self, name='Specificity',**kwargs):
+        super().__init__(name='Specificity', **kwargs)
         self.total = self.add_weight("total", initializer="zeros")
         self.count = self.add_weight("count", initializer="zeros")
         
