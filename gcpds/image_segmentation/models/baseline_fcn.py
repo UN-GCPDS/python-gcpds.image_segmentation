@@ -29,32 +29,32 @@ def fcn_baseline(input_shape=(128,128,3), name='FCN', out_channels=1):
     # Encoder 
     input_ = layers.Input(shape=input_shape)
 
-    x =  layers.BatchNormalization()(input_)
+    x =  layers.BatchNormalization(name='Batch=00')(input_)
     
     x =  DefaultConv2D(32,kernel_initializer=kernel_initializer(34),name='Conv10')(x)
     x =  DefaultConv2D(32,kernel_initializer=kernel_initializer(4),name='Conv11')(x)
     x =  layers.BatchNormalization(name='Batch10')(x)
-    x = DefaultPooling()(x) # 128x128 -> 64x64
+    x = DefaultPooling(name='Pool10')(x) # 128x128 -> 64x64
 
     x =  DefaultConv2D(32,kernel_initializer=kernel_initializer(56),name='Conv20')(x)
     x =  DefaultConv2D(32,kernel_initializer=kernel_initializer(28),name='Conv21')(x)
     x =  layers.BatchNormalization(name='Batch20')(x)
-    x = DefaultPooling()(x) # 64x64 -> 32x32
+    x = DefaultPooling(name='Pool20')(x) # 64x64 -> 32x32
 
     x =  DefaultConv2D(64,kernel_initializer=kernel_initializer(332),name='Conv30')(x)
     x =  DefaultConv2D(64,kernel_initializer=kernel_initializer(2),name='Conv31')(x)
     x =  layers.BatchNormalization(name='Batch30')(x)
-    x = level_1 = DefaultPooling()(x) # 32x32 -> 16x16
+    x = level_1 = DefaultPooling(name='Pool30')(x) # 32x32 -> 16x16
 
     x =  DefaultConv2D(128,kernel_initializer=kernel_initializer(67),name='Conv40')(x)
     x =  DefaultConv2D(128,kernel_initializer=kernel_initializer(89),name='Conv41')(x)
     x =  layers.BatchNormalization(name='Batch40')(x)
-    x = level_2 = DefaultPooling()(x) # 16x16 -> 8x8
+    x = level_2 = DefaultPooling(name='Pool40')(x) # 16x16 -> 8x8
 
     x =  DefaultConv2D(256,kernel_initializer=kernel_initializer(7),name='Conv50')(x)
     x =  DefaultConv2D(256,kernel_initializer=kernel_initializer(23),name='Conv51')(x)
     x =  layers.BatchNormalization(name='Batch50')(x)
-    x =  DefaultPooling()(x) # 8x8 -> 4x4
+    x =  DefaultPooling(name='Pool50')(x) # 8x8 -> 4x4
 
     
     #Decoder
@@ -67,7 +67,7 @@ def fcn_baseline(input_shape=(128,128,3), name='FCN', out_channels=1):
                     name='Conv60')(level_2)
 
 
-    x =  layers.Add()([x,level_3])
+    x =  layers.Add(name='Add10')([x,level_3])
 
     
     x = level_4 = DefaultTranspConv(out_channels,kernel_size=4,use_bias=False,
@@ -77,7 +77,7 @@ def fcn_baseline(input_shape=(128,128,3), name='FCN', out_channels=1):
                         kernel_initializer=kernel_initializer(54),
                         name='Conv70')(level_1)
 
-    x =  layers.Add()([x,level_4])
+    x =  layers.Add(name='Add20')([x,level_4])
 
     x = DefaultTranspConv(out_channels,kernel_size=16,strides=8,
                             activation='sigmoid',use_bias=True,
