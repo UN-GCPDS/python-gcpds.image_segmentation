@@ -25,7 +25,7 @@ class Specificity(Metric):
         return self.total/self.count 
     
     @staticmethod
-    def specificity(self, y_true, y_pred):
+    def specificity(y_true, y_pred):
         y_true = tf.cast(y_true < 0.5,tf.float32)
         y_pred = tf.cast(y_pred < 0.5 ,tf.float32)
 
