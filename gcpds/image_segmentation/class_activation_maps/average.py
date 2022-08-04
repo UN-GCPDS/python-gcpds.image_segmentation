@@ -59,7 +59,8 @@ class AveragesCam:
         Y_c = np.array(score_function(self.Y_c))
         return Y_c, O_c
 
-    def average_drop(self, cams: tf.Tensor, score_function: Callable) -> float:
+    def average_drop(self, cams: tf.Tensor, score_function: Callable,
+                     return_vector: bool = False) -> float:
         """ Calculate average drop.
 
         Parameters
@@ -82,9 +83,16 @@ class AveragesCam:
 
         """
         Y_c, O_c = self._get_scores(cams, score_function)
-        return np.mean(np.maximum(0,(Y_c-O_c))/(Y_c+epsilon()))*100
+        avg_drop = np.mean(np.maximum(0,(Y_c-O_c))/(Y_c+epsilon()))*100
 
-    def average_increase(self, cams: tf.Tensor, score_function: Callable) -> float:
+        if return_vector:
+            return avg_drop,Y_c,O_c
+        else:
+            return avg_drop
+
+
+    def average_increase(self, cams: tf.Tensor, score_function: Callable,
+                            return_vector: bool = False) -> float:
         """ Calculate average increase.
 
         Parameters
@@ -107,4 +115,9 @@ class AveragesCam:
 
         """
         Y_c, O_c = self._get_scores(cams, score_function)
-        return 100*np.mean(Y_c < O_c)
+        avg_increase = 100*np.mean(Y_c < O_c)
+
+        if return_vector:
+            return avg_increase, Y_c, O_c
+        else:
+            return avg_increase
