@@ -17,7 +17,7 @@ class Specificity(Metric):
         self.count = self.add_weight("count", initializer="zeros")
         
     def update_state(self, y_true, y_pred, sample_weight=None):
-        metric = self.sensitivity(y_true, y_pred)
+        metric = self.specificity(y_true, y_pred)
         self.total.assign_add(tf.reduce_sum(metric))
         self.count.assign_add(tf.cast(tf.shape(y_true)[0], tf.float32))
     
