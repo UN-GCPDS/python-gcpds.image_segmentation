@@ -11,10 +11,10 @@ import tensorflow as tf
 class Sensitivity(Metric):
 
     def __init__(self,**kwargs):
+        super().__init__(**kwargs)
         self.total = self.add_weight("total", initializer="zeros")
         self.count = self.add_weight("count", initializer="zeros")
-        super().__init__(**kwargs)
-
+        
     def update_state(self, y_true, y_pred, sample_weight=None):
         metric = self.sensitivity(y_true, y_pred)
         self.total.assign_add(tf.reduce_sum(metric))

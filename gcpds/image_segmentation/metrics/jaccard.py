@@ -10,11 +10,12 @@ import tensorflow as tf
 
 class Jaccard(Metric):
 
-    def __init__(self,smooth,**kwargs):
+    def __init__(self,smooth=1.0,**kwargs):
+        super().__init__(**kwargs)
         self.smooth = smooth
         self.total = self.add_weight("total", initializer="zeros")
         self.count = self.add_weight("count", initializer="zeros")
-        super().__init__(**kwargs)
+        
 
     def update_state(self, y_true, y_pred, sample_weight=None):
         metric = self.jaccard(y_true, y_pred)
