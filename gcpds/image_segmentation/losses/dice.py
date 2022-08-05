@@ -13,7 +13,7 @@ from tensorflow.keras.utils import to_categorical
 class DiceCoeficiente(Loss):
     def __init__(self, smooth=1.,name='DiceCoeficiente', **kwargs):
         self.smooth = smooth
-        super().__init__(name='DiceCoeficiente',**kwargs)
+        super().__init__(name=name,**kwargs)
 
     def call(self, y_true, y_pred):
         intersection = K.sum(y_true * y_pred, axis=[1,2,3])
