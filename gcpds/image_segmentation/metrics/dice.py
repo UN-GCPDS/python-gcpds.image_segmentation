@@ -10,7 +10,7 @@ import tensorflow as tf
 
 class DiceCoeficiente(Metric):
 
-    def __init__(self,smooth=1.0,name='DiceCoeficiente',**kwargs):
+    def __init__(self,smooth=1.0,name='MetricDiceCoeficiente',**kwargs):
         super().__init__(name=name,**kwargs)
         self.smooth = smooth
         self.total = self.add_weight("total", initializer="zeros")
