@@ -54,7 +54,7 @@ class AveragesCam:
         """
         if type(cams) is list:
             cams = [cam[...,None] for cam in cams]
-            inputs = [input_*cams for cam,input_ in zip(self.inputs,cams)]
+            inputs = [input_*cam for input_,cam in zip(self.inputs,cams)]
         else:
             cams = cams[...,None]
             inputs = self.inputs*cams
