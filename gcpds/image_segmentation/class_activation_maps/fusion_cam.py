@@ -9,6 +9,8 @@ from tqdm import tqdm
 import numpy as np 
 from typing import Callable, Iterable
 
+from tensorflow.math import softmax
+
 
 def _cumulative_maximun() -> Callable:
     """ Accumulation of the maximum
@@ -34,8 +36,36 @@ def _cumulative_maximun() -> Callable:
     return maximun
 
 
+def _cumulative_weights(return_weights) -> Callable:
+    """ Accumulation for computing wiegths per layer
+    """
+
+    has_started = False 
+    result = None 
+    cams = []
+    weights = []
+
+    def weights_(input_ : np.array)  -> np.array:
+        nonlocal has_started, result, cams
+        
+        wiegth = np.sum(input_, axis=(-2,-1))
+        cams.append(input_[None,...])
+        
+        weights.append(wiegth)
+        result = softmax(np.vstack(weights),axis=0)[...,None,None]*np.vstack(cams)
+
+        if return_weights:
+            return np.sum(result, axis=0), np.vstack(weights)
+        else: 
+            return np.sum(result, axis=0)
+
+    return weights_
+
+
+
 def fusion_cam(callable_cam : Callable, images : np.array, 
-                score_function : Callable, layers : Iterable) -> np.array:
+                score_function : Callable, layers : Iterable,
+                type_fusion = 'maximun', return_weights=False) -> np.array:
 
     """ Fusion CAM from multiple layers without scaling just maximun.
     Parameters
@@ -48,13 +78,21 @@ def fusion_cam(callable_cam : Callable, images : np.array,
         Same score function used to calculate the CAMs in tf-keras-vis.
     layers :
         Layers where obtain the CAMs.
+    type_fusion:
+        Type fusion ['maximun', 'weights']
+    return_weights:
+        return weights of type weights fusion
     Returns
     -------
     np.array 
         Result fusion of the CAMs at multiple layers.
     
     """
-    maximun = _cumulative_maximun()
+
+    if type_fusion == 'maximun':
+        aggregation = _cumulative_maximun()
+    elif type_fusion == 'weights':
+        aggregation = _cumulative_weights(return_weights)
 
     layers = tqdm(layers)
     for layer in layers:
@@ -63,8 +101,10 @@ def fusion_cam(callable_cam : Callable, images : np.array,
                             seek_penultimate_conv_layer=False)
         
         if type(cam) is list:
-            cam = [maximun(i) for i in cam]
+            cam = [aggregation(i) for i in cam]
         else:
-            cam = maximun(cam)
-    
-    return cam 
+            cam = aggregation(cam)
+    if return_weights:
+        return cam[0],cam[1]
+    else:
+        return cam 
