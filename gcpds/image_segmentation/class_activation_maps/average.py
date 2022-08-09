@@ -52,7 +52,7 @@ class AveragesCam:
             is the scores over the masked input with the cams.
 
         """
-        if type(cam) is list:
+        if type(cams) is list:
             cams = [cam[...,None] for cam in cams]
             inputs = [input_*cams for cam,input_ in zip(self.inputs,cams)]
         else:
