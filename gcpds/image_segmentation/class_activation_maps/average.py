@@ -52,8 +52,13 @@ class AveragesCam:
             is the scores over the masked input with the cams.
 
         """
-        cams = cams[...,None]
-        inputs = self.inputs*cams
+        if type(cam) is list:
+            cams = [cam[...,None] for cam in cams]
+            inputs = [input_*cams for cam,input_ in zip(self.inputs,cams)]
+        else:
+            cams = cams[...,None]
+            inputs = self.inputs*cams
+        
         O_c = self.model.predict(inputs)
         O_c = np.array(score_function(O_c))
         Y_c = np.array(score_function(self.Y_c))
