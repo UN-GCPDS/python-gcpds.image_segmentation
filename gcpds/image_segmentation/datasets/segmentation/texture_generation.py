@@ -94,7 +94,7 @@ class NoiseUtils:
         max = noise.max()
         min = noise.min()
         
-        self.img = np.int8((noise - min) / (max - min) * 255 )
+        self.img = np.uint8((noise - min) / (max - min) * 255 )
 
 
     def fractalBrownianMotion(self, x, y, func):

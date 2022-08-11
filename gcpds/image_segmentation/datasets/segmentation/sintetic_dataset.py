@@ -4,6 +4,7 @@ import skimage
 
 from .texture_generation import NoiseUtils
 
+
 class SinteticDataset: 
     def __init__(self, seed=42, samples=10, img_shape=128,
                  blob_size_fraction=0.3):
