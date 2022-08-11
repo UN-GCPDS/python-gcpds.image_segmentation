@@ -2,6 +2,8 @@ import tensorflow as tf
 import numpy as np 
 import skimage
 
+from .texture_generation import NoiseUtils
+
 class SinteticDataset: 
     def __init__(self, seed=42, samples=10, img_shape=128,
                  blob_size_fraction=0.3):
@@ -11,16 +13,24 @@ class SinteticDataset:
         self.blob_size_fraction = blob_size_fraction
 
     def generate_sample(self,seed):
+
+        background = NoiseUtils(self.img_shape)
+        background.makeTexture(texture = background.wood)
+        background = background.img 
+
+        foreground = NoiseUtils(self.img_shape)
+        foreground.makeTexture(texture = foreground.cloud)
+        foreground = foreground.img 
+
         mask = skimage.data.binary_blobs(length=self.img_shape,
                                          blob_size_fraction=self.blob_size_fraction,
                                          seed=seed)
 
         np.random.seed(seed)
-        img1 = mask*(np.random.uniform(0,1,size=(self.img_shape,self.img_shape)))
+        img1 = mask*foreground
 
         np.random.seed(seed)
-        img2 = ~mask*(np.random.normal(size=(self.img_shape,self.img_shape),
-                                       loc=0.5,scale=0.125))
+        img2 = ~mask*background
 
         img =  img2 + img1
         img = (img - img.min())/(img.max()-img.min())
