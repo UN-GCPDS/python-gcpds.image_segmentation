@@ -10,9 +10,10 @@ import tensorflow as tf
 
 class Jaccard(Metric):
 
-    def __init__(self,smooth=1.0, name='Jaccard',**kwargs):
+    def __init__(self,smooth=1.0, target_class=None, name='Jaccard',**kwargs):
         super().__init__(name=name, **kwargs)
         self.smooth = smooth
+        self.target_class = target_class
         self.total = self.add_weight("total", initializer="zeros")
         self.count = self.add_weight("count", initializer="zeros")
         
@@ -26,13 +27,22 @@ class Jaccard(Metric):
         return self.total/self.count 
 
     def jaccard(self, y_true, y_pred):
-        intersection = K.sum(y_true * y_pred, axis=[1,2,3])
-        union = K.sum(y_true, axis=[1,2,3]) + K.sum(y_pred, axis=[1,2,3])
-        return (intersection + self.smooth) / (union - intersection + self.smooth)
+        intersection = K.sum(y_true * y_pred, axis=[1,2])
+        union = K.sum(y_true, axis=[1,2]) + K.sum(y_pred, axis=[1,2])
+        jaccard_per_class = (intersection + self.smooth) / (union - intersection + self.smooth)
+
+        if self.target_class != None:
+            jaccard_per_class = tf.gather(jaccard_per_class, 
+                                           self.target_class, axis=1)
+
+        jaccar_mean_per_class = K.mean(jaccard_per_class,axis=-1)
+        return jaccar_mean_per_class
+
     
     def get_config(self,):
         base_config = super().get_config()
-        return {**base_config, "smooth": self.smooth}
+        return {**base_config, "smooth": self.smooth,
+                "target_class":self.target_class}
 
 
 class SparseCategoricalJaccard(Jaccard):

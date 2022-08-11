@@ -11,13 +11,14 @@ from .sensitivity import Sensitivity
 
 class Specificity(Metric):
 
-    def __init__(self, name='Specificity',**kwargs):
+    def __init__(self, target_class=None, name='Specificity',**kwargs):
         super().__init__(name=name, **kwargs)
+        self.target_class = target_class
         self.total = self.add_weight("total", initializer="zeros")
         self.count = self.add_weight("count", initializer="zeros")
         
     def update_state(self, y_true, y_pred, sample_weight=None):
-        metric = self.specificity(y_true, y_pred)
+        metric = self.specificity(y_true, y_pred, self.target_class)
         self.total.assign_add(tf.reduce_sum(metric))
         self.count.assign_add(tf.cast(tf.shape(y_true)[0], tf.float32))
     
@@ -25,15 +26,15 @@ class Specificity(Metric):
         return self.total/self.count 
     
     @staticmethod
-    def specificity(y_true, y_pred):
+    def specificity(y_true, y_pred, target_class=None):
         y_true = tf.cast(y_true < 0.5,tf.float32)
         y_pred = tf.cast(y_pred < 0.5 ,tf.float32)
 
-        return Sensitivity.sensitivity(y_true, y_pred)
+        return Sensitivity.sensitivity(y_true, y_pred, target_class)
     
     def get_config(self,):
         base_config = super().get_config()
-        return base_config
+        return {**base_config, "target_class":self.target_class}
 
 
 class SparseCategoricalSpecificity(Specificity):
