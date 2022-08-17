@@ -18,7 +18,7 @@ setup(
 
     download_url='',
 
-    install_requires=['tensorflow>=2.6',       
+    install_requires=['tensorflow',       
     ],
 
     include_package_data=True,
