@@ -1,110 +1,72 @@
-""" 
-Fusion cam from multiples layers 
-References http://mftp.mmcheng.net/Papers/21TIP_LayerCAM.pdf
-"""
-
-
-import numpy as np 
-from tqdm import tqdm 
-import numpy as np 
 from typing import Callable, Iterable
 
-from tensorflow.math import softmax
+import numpy as np
+import tensorflow as tf
+from tqdm.auto import tqdm
+
+from .score import SegScore
 
 
-def _cumulative_maximun() -> Callable:
-    """ Accumulation of the maximum
-    """
-
-    has_started = False 
-    result = None 
-
-    def maximun(input_ : np.array)  -> np.array:
-        nonlocal has_started, result
-        
-        if not has_started:
-            has_started = True 
-            result = input_
-
-        result = result[...,None]
-        input_ = input_[...,None]
-
-        concat = np. concatenate([result,input_],axis=-1)
-        result = np.max(concat, axis=-1)
-        return result
-
-    return maximun
+class FusionCam:
+    def __init__(self, callable_cam : Callable, dataset : tf.data, layers : Iterable, 
+                 target_class: int):
+        self.callable_cam = callable_cam
+        self.dataset = dataset
+        self.layers = layers 
+        self.target_class = target_class 
+        self.weights = self._get_weigths()
 
 
-def _cumulative_weights(return_weights) -> Callable:
-    """ Accumulation for computing wiegths per layer
-    """
+    def _get_weigths(self,):
+        weights = np.zeros(shape=(len(self.layers)))
 
-    has_started = False 
-    result = None 
-    cams = []
-    weights = []
+        layers = tqdm(self.layers)
+        for i,layer in enumerate(layers):
+            layers.set_postfix({'Layer ':layer})
+            values = []
+            dataset = tqdm(self.dataset)
+            for j,(img,mask) in enumerate(dataset):
+                dataset.set_postfix({'Bacth ': j+1})
+                cam = self.callable_cam(SegScore(mask,
+                                                 target_class=self.target_class), 
+                                        img,
+                                        penultimate_layer=layer,
+                                        seek_penultimate_conv_layer=False,
+                                        normalize_cam =False)
+                value = tf.reduce_sum(cam[...,None]*mask, axis=[1,2])/tf.reduce_sum(mask,axis=[1,2])
+                values.extend(value)
 
-    def weights_(input_ : np.array)  -> np.array:
-        nonlocal has_started, result, cams
-        
-        wiegth = np.sum(input_, axis=(-2,-1))
-        cams.append(input_[None,...])
-        
-        weights.append(wiegth)
-        result = softmax(np.vstack(weights),axis=0)[...,None,None]*np.vstack(cams)
+            values = np.array(values)
+            weights[i] = np.mean(values)
 
-        if return_weights:
-            return np.sum(result, axis=0), np.vstack(weights)
-        else: 
-            return np.sum(result, axis=0)
+        normalize_weights = weights/np.max(weights)
+        normalize_weights = tf.math.softmax(normalize_weights)
 
-    return weights_
-
-
-
-def fusion_cam(callable_cam : Callable, images : np.array, 
-                score_function : Callable, layers : Iterable,
-                type_fusion = 'maximun', return_weights=False) -> np.array:
-
-    """ Fusion CAM from multiple layers without scaling just maximun.
-    Parameters
-    ----------
-    callable_cam :
-        Function to obtain CAM.
-    images :
-        Images to obtain CAM.
-    score_function :
-        Same score function used to calculate the CAMs in tf-keras-vis.
-    layers :
-        Layers where obtain the CAMs.
-    type_fusion:
-        Type fusion ['maximun', 'weights']
-    return_weights:
-        return weights of type weights fusion
-    Returns
-    -------
-    np.array 
-        Result fusion of the CAMs at multiple layers.
+        return normalize_weights
     
-    """
 
-    if type_fusion == 'maximun':
-        aggregation = _cumulative_maximun()
-    elif type_fusion == 'weights':
-        aggregation = _cumulative_weights(return_weights)
+    def __call__(self, dataset: tf.data):
 
-    layers = tqdm(layers)
-    for layer in layers:
-        layers.set_postfix({'Layer ':layer})
-        cam = callable_cam(score_function, images, penultimate_layer=layer,
-                            seek_penultimate_conv_layer=False)
-        
-        if type(cam) is list:
-            cam = [aggregation(i) for i in cam]
-        else:
-            cam = aggregation(cam)
-    if return_weights:
-        return cam[0],cam[1]
-    else:
-        return cam 
+        layers = tqdm(self.layers)
+        result = 0 
+        for i,layer in enumerate(layers):
+            layers.set_postfix({'Layer ':layer})
+
+            dataset_ = tqdm(dataset)
+            cams = []
+            imgs = []
+            for j,(img,mask) in enumerate(dataset_):
+                dataset_.set_postfix({'Bacth ': j})
+                cam = self.callable_cam(SegScore(mask,
+                                                 target_class=self.target_class), 
+                                        img,
+                                        penultimate_layer=layer,
+                                        seek_penultimate_conv_layer=False)
+                cams.append(cam)
+                imgs.append(img)          
+            result += self.weights[i]*np.vstack(cams)
+        min_ = tf.reduce_min(result,axis=[1,2],keepdims=True)
+        max_ = tf.reduce_max(result,axis=[1,2],keepdims=True)
+        result = (result  - min_) /(max_ - min_)
+
+        return result,np.vstack(imgs)
