@@ -18,7 +18,9 @@ setup(
 
     download_url='',
 
-    install_requires=['tensorflow',       
+    install_requires=['tensorflow',
+                     'scikit-image',
+                     'matplotlib',       
     ],
 
     include_package_data=True,
