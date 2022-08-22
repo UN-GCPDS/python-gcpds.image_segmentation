@@ -7,7 +7,7 @@ from matplotlib import image
 
 
 class NerveUtp:
-    def __init__(self, split=0.2):
+    def __init__(self, split=None):
         self.__id = "1GewZspflKFgN7Clut5Xqr3E3CQLSfoYU"
         self.__folder = os.path.join(os.path.dirname(__file__),
                                      'Datasets','nerviosUTP')
@@ -20,23 +20,36 @@ class NerveUtp:
         unzip(destination_path_zip, self.__folder)
 
         self.file_images = glob(os.path.join(self.__path_images,'*[!(mask)].png'))
-        self.file_images = map(lambda x: x[:-4],file_images)
+        self.file_images = list(map(lambda x: x[:-4],self.file_images))
+        self.split = split
 
-    def gen_dataset(self,):
+    @staticmethod
+    def __gen_dataset(file_images):
         def generator():
-            for root_name in self.file_images:
+            for root_name in file_images:
                 img = image.imread(f'{root_name}.png')
                 mask = image.imread(f'{root_name}_mask.png')[...,None]
                 label = os.path.split(root_name)[-1].split('_')[0]
                 yield img, mask, label
         return generator
 
-
-    def __call__(self,):
-        return tf.data.Dataset.from_generator(self.gen_dataset(),
+    
+    def __generate_tf_data(self,files):
+        return tf.data.Dataset.from_generator(self.__gen_dataset(files),
                                     output_signature = (tf.TensorSpec((None,None,None), tf.float32), 
                                                         tf.TensorSpec((None,None,None), tf.float32),
                                                         tf.TensorSpec(None, tf.string)))
+
+    def __call__(self,):
+        if self.split: 
+            index = int(len(self.file_images)*self.split)
+            train_files = self.file_images[:index]
+            test_files = self.file_images[index:]
+            train_dataset = self.__generate_tf_data(train_files)
+            test_dataset = self.__generate_tf_data(test_files)
+            return train_dataset, test_dataset
+        else:
+            return self.__generate_tf_data(self.file_images)
 
 
 
