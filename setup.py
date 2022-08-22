@@ -20,7 +20,8 @@ setup(
 
     install_requires=['tensorflow',
                      'scikit-image',
-                     'matplotlib',       
+                     'matplotlib',
+                     'gdown'       
     ],
 
     include_package_data=True,

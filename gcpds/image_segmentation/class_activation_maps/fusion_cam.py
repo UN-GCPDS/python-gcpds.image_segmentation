@@ -69,4 +69,4 @@ class FusionCam:
         max_ = tf.reduce_max(result,axis=[1,2],keepdims=True)
         result = (result  - min_) /(max_ - min_)
 
-        return result,np.vstack(imgs)
+        return np.array(result),np.vstack(imgs)
