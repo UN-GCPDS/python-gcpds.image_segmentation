@@ -23,6 +23,7 @@ class NerveUtp:
         self.file_images = glob(os.path.join(self.__path_images,'*[!(mask)].png'))
         self.file_images = list(map(lambda x: x[:-4],self.file_images))
         self.split = split
+        self.num_samples = len(self.file_images)
 
     @staticmethod
     def __preprocessing_mask(mask):

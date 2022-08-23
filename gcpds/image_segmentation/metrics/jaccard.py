@@ -29,14 +29,15 @@ class Jaccard(Metric):
     def jaccard(self, y_true, y_pred):
         intersection = K.sum(y_true * y_pred, axis=[1,2])
         union = K.sum(y_true, axis=[1,2]) + K.sum(y_pred, axis=[1,2])
-        jaccard_per_class = (intersection + self.smooth) / (union - intersection + self.smooth)
+        jaccard = (intersection + self.smooth) / (union - intersection + self.smooth)
 
         if self.target_class != None:
-            jaccard_per_class = tf.gather(jaccard_per_class, 
-                                           self.target_class, axis=1)
-
-        jaccar_mean_per_class = K.mean(jaccard_per_class,axis=-1)
-        return jaccar_mean_per_class
+            jaccard = tf.gather(jaccard, 
+                                self.target_class, axis=1)
+        else: 
+            jaccard = K.mean(jaccard,axis=-1)
+            
+        return jaccard
 
     
     def get_config(self,):

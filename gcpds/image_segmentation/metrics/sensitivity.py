@@ -32,14 +32,15 @@ class Sensitivity(Metric):
         true_positves = K.sum(y_true*y_pred,axis=[1,2])
         total_positives = K.sum(y_true,axis=[1,2])
 
-        sensitivity_per_class = true_positves / (total_positives + K.epsilon())
+        sensitivity = true_positves / (total_positives + K.epsilon())
 
         if target_class != None:
-            sensitivity_per_class = tf.gather(sensitivity_per_class,
-                                              target_class, axis=1)
-    
-        sensitivity_mean_per_class = K.mean(sensitivity_per_class,axis=-1)
-        return sensitivity_mean_per_class
+            sensitivity = tf.gather(sensitivity,
+                                    target_class, axis=1)
+        else:
+            sensitivity = K.mean(sensitivity,axis=-1)
+            
+        return sensitivity
     
     def get_config(self,):
         base_config = super().get_config()

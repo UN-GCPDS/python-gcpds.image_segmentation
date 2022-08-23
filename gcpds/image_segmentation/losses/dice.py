@@ -19,14 +19,15 @@ class DiceCoeficiente(Loss):
     def call(self, y_true, y_pred):
         intersection = K.sum(y_true * y_pred, axis=[1,2])
         union = K.sum(y_true,axis=[1,2]) + K.sum(y_pred,axis=[1,2])
-        dice_coef_per_class = -(2. * intersection + self.smooth) /(union + self.smooth)
-
+        dice_coef = -(2. * intersection + self.smooth) /(union + self.smooth)
+        
         if self.target_class != None:
-            dice_coef_per_class = tf.gather(dice_coef_per_class,
-                                             self.target_class, axis=1)
+            dice_coef = tf.gather(dice_coef,
+                                  self.target_class, axis=1)
+        else:
+            dice_coef = K.mean(dice_coef,axis=-1)
 
-        dice_coef_mean_per_class = K.mean(dice_coef_per_class,axis=-1)
-        return dice_coef_mean_per_class
+        return dice_coef
 
     def get_config(self,):
         base_config = super().get_config()
