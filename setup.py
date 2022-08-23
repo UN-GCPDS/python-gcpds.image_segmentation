@@ -21,7 +21,8 @@ setup(
     install_requires=['tensorflow',
                      'scikit-image',
                      'matplotlib',
-                     'gdown'       
+                     'gdown',
+                     'opencv-python'      
     ],
 
     include_package_data=True,

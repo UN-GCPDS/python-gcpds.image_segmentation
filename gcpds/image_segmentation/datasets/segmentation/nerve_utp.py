@@ -1,9 +1,10 @@
 import os
 from glob import glob
 
+import cv2
+import numpy as np
 import tensorflow as tf
 from gcpds.image_segmentation.datasets.utils import download_from_drive, unzip
-from matplotlib import image
 
 
 class NerveUtp:
@@ -24,11 +25,18 @@ class NerveUtp:
         self.split = split
 
     @staticmethod
+    def __preprocessing_mask(mask):
+        mask = mask[...,0] > 0.5 
+        mask = mask.astype(np.float32)
+        return mask[...,None]
+
+    @staticmethod
     def __gen_dataset(file_images):
         def generator():
             for root_name in file_images:
-                img = image.imread(f'{root_name}.png')
-                mask = image.imread(f'{root_name}_mask.png')[...,None]
+                img = cv2.imread(f'{root_name}.png')/255
+                mask = cv2.imread(f'{root_name}_mask.png')
+                mask = NerveUtp.__preprocessing_mask(mask)
                 label = os.path.split(root_name)[-1].split('_')[0]
                 yield img, mask, label
         return generator
