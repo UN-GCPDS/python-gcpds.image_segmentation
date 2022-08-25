@@ -9,6 +9,7 @@ dataset = NerveUtp(split=0.2)
 train_dataset, test_dataset = dataset()
 train_dataset, test_dataset = train_dataset.batch(1), test_dataset.batch(1)
 
+print("Nerves: ", dataset.labels_info)
 for img, mask, label in train_dataset.take(1):
     plt.subplot(1,2,1)
     plt.imshow(img[0,...])

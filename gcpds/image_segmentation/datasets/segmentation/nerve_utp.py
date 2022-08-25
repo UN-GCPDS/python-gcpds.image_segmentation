@@ -15,7 +15,8 @@ class NerveUtp:
         self.__path_images =  os.path.join(self.__folder,
                                             'ImagenesNervios_')
 
-        destination_path_zip = os.path.join(self.__folder,'ImagenesNervios.zip')
+        destination_path_zip = os.path.join(self.__folder,
+                                            'ImagenesNervios.zip')
         os.makedirs(self.__folder,exist_ok=True)
         download_from_drive(self.__id, destination_path_zip)
         unzip(destination_path_zip, self.__folder)
@@ -24,6 +25,14 @@ class NerveUtp:
         self.file_images = list(map(lambda x: x[:-4],self.file_images))
         self.split = split
         self.num_samples = len(self.file_images)
+        self.labels_info = self.__get_labels_info()
+
+    def __get_labels_info(self,):
+        unique_labels = map(lambda x: os.path.split(x)[-1].split('_')[0],
+                            self.file_images)
+        unique_labels, counts = np.unique(list(unique_labels), return_counts=True)
+        labels_info = {label:count for label,count in zip(unique_labels,counts)}
+        return labels_info
 
     @staticmethod
     def __preprocessing_mask(mask):
@@ -44,10 +53,12 @@ class NerveUtp:
 
     
     def __generate_tf_data(self,files):
+        output_signature = (tf.TensorSpec((None,None,None), tf.float32), 
+                            tf.TensorSpec((None,None,None), tf.float32),
+                            tf.TensorSpec(None, tf.string))
+
         return tf.data.Dataset.from_generator(self.__gen_dataset(files),
-                                    output_signature = (tf.TensorSpec((None,None,None), tf.float32), 
-                                                        tf.TensorSpec((None,None,None), tf.float32),
-                                                        tf.TensorSpec(None, tf.string)))
+                                    output_signature = output_signature)
 
     def __call__(self,):
         if self.split: 
