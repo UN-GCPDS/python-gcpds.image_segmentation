@@ -8,24 +8,32 @@ from gcpds.image_segmentation.datasets.utils import download_from_drive, unzip
 
 
 class NerveUtp:
-    def __init__(self, split=None):
+    def __init__(self, split=None, seed=42):
+        self.split = split
+        self.seed = seed 
+
         self.__id = "1GewZspflKFgN7Clut5Xqr3E3CQLSfoYU"
         self.__folder = os.path.join(os.path.dirname(__file__),
                                      'Datasets','nerviosUTP')
         self.__path_images =  os.path.join(self.__folder,
                                             'ImagenesNervios_')
-
-        destination_path_zip = os.path.join(self.__folder,
-                                            'ImagenesNervios.zip')
-        os.makedirs(self.__folder,exist_ok=True)
-        download_from_drive(self.__id, destination_path_zip)
-        unzip(destination_path_zip, self.__folder)
+        self.__set_env()
 
         self.file_images = glob(os.path.join(self.__path_images,'*[!(mask)].png'))
         self.file_images = list(map(lambda x: x[:-4],self.file_images))
-        self.split = split
+        self.file_images.sort()
+        np.random.seed(seed)  
+        np.random.shuffle(self.file_images)
+
         self.num_samples = len(self.file_images)
         self.labels_info = self.__get_labels_info()
+
+    def __set_env(self):
+        destination_path_zip = os.path.join(self.__folder,
+                                            'ImagenesNervios.zip')
+        os.makedirs(self.__folder, exist_ok=True)
+        download_from_drive(self.__id, destination_path_zip)
+        unzip(destination_path_zip, self.__folder)
 
     def __get_labels_info(self,):
         unique_labels = map(lambda x: os.path.split(x)[-1].split('_')[0],
@@ -51,7 +59,6 @@ class NerveUtp:
                 yield img, mask, label
         return generator
 
-    
     def __generate_tf_data(self,files):
         output_signature = (tf.TensorSpec((None,None,None), tf.float32), 
                             tf.TensorSpec((None,None,None), tf.float32),

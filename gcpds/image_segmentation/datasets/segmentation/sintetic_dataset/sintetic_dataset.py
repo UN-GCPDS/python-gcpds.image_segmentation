@@ -18,14 +18,14 @@ class SinteticDataset:
         self.textures = ['marble','wood','cloud']
         self.textures.remove(target_texture)
     
-    def __generate_structure(self,texture):
+    def __generate_structure(self, texture):
         structure = NoiseUtils(self.img_shape)
         texture = getattr(structure,texture)
         structure.makeTexture(texture = texture)
         structure = structure.img 
         return structure
 
-    def generate_sample(self,seed):
+    def generate_sample(self, seed):
         img = self.__generate_structure(self.target_texture)
         mask = org_mask = skimage.data.binary_blobs(length=self.img_shape,
                                          blob_size_fraction=self.blob_size_fraction,
@@ -55,6 +55,8 @@ class SinteticDataset:
         return generator
 
     def __call__(self,):
+        output_signature = (tf.TensorSpec((None,None,None), tf.float32), 
+                            tf.TensorSpec((None,None,None), tf.float32))
         return tf.data.Dataset.from_generator(self.gen_dataset(),
-                                    output_signature = (tf.TensorSpec((None,None,None), tf.float32), 
-                                                        tf.TensorSpec((None,None,None), tf.float32)))
+                                    output_signature = output_signature
+                                    )

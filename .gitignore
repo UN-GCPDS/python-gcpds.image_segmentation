@@ -1,6 +1,5 @@
 __pycache__
 *.py[cod]
-
 .env 
-
 Datasets
+python-gcpds.image_segmentation.code-workspace
