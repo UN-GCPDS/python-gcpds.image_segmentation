@@ -1,3 +1,4 @@
+import logging
 import os
 from glob import glob
 
@@ -71,14 +72,16 @@ class NerveUtp:
         if self.split: 
             index = int(len(self.file_images)*self.split)
             train_files = self.file_images[:-index]
-            print(len(train_files))
+            logging.info(f'Number of images for training: {len(train_files)}')
             test_files = self.file_images[-index:]
-            print(len(test_files))
+            logging.info(f'Number of images for testing: {len(test_files)}')
             train_dataset = self.__generate_tf_data(train_files)
             test_dataset = self.__generate_tf_data(test_files)
             return train_dataset, test_dataset
         else:
+            logging.info(f'Number of images for training: {len(self.num_samples)}')
             return self.__generate_tf_data(self.file_images)
+
 
 
 
