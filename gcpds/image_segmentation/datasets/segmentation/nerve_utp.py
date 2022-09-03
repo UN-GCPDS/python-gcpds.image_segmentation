@@ -5,12 +5,16 @@ from glob import glob
 import cv2
 import numpy as np
 import tensorflow as tf
-from gcpds.image_segmentation.datasets.utils import download_from_drive, unzip
+from gcpds.image_segmentation.datasets.utils import download_from_drive
+from gcpds.image_segmentation.datasets.utils import unzip
+from gcpds.image_segmentation.datasets.utils import listify
 
+
+logging.basicConfig(level=logging.INFO)
 
 class NerveUtp:
-    def __init__(self, split=None, seed=42):
-        self.split = split
+    def __init__(self, split=1.0, seed=42):
+        self.split = listify(split)
         self.seed = seed 
 
         self.__id = "1GewZspflKFgN7Clut5Xqr3E3CQLSfoYU"
@@ -68,19 +72,28 @@ class NerveUtp:
         return tf.data.Dataset.from_generator(self.__gen_dataset(files),
                                     output_signature = output_signature)
 
+
+    def __get_indices_partition(self):
+        indices = [round(self.num_samples*s) for s in self.split]
+        indices = np.cumsum(indices)
+        return indices
+
+    def __get_log_tf_data(self,i,files):
+        logging.info(f' Number of images for Partition {i}: {len(files)}')
+        return self.__generate_tf_data(files) 
+
     def __call__(self,):
-        if self.split: 
-            index = int(len(self.file_images)*self.split)
-            train_files = self.file_images[:-index]
-            logging.info(f'Number of images for training: {len(train_files)}')
-            test_files = self.file_images[-index:]
-            logging.info(f'Number of images for testing: {len(test_files)}')
-            train_dataset = self.__generate_tf_data(train_files)
-            test_dataset = self.__generate_tf_data(test_files)
-            return train_dataset, test_dataset
-        else:
-            logging.info(f'Number of images for training: {len(self.num_samples)}')
-            return self.__generate_tf_data(self.file_images)
+        indices = self.__get_indices_partition()
+        print(indices)
+        p_files = np.split(self.file_images,indices)
+        p_files = [p_file for p_file in p_files if p_file.size]
+
+        partitions = [self.__get_log_tf_data(i+1,p) for i,p in enumerate(p_files)]
+
+        if len(partitions) ==1:
+            return partitions[0]
+        
+        return partitions
 
 
 
