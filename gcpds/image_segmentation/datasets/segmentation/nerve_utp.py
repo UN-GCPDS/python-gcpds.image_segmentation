@@ -10,7 +10,6 @@ from gcpds.image_segmentation.datasets.utils import unzip
 from gcpds.image_segmentation.datasets.utils import listify
 
 
-logging.basicConfig(level=logging.INFO)
 
 class NerveUtp:
     def __init__(self, split=1.0, seed=42):
@@ -74,17 +73,17 @@ class NerveUtp:
 
 
     def __get_indices_partition(self):
-        indices = [round(self.num_samples*s) for s in self.split]
+        indices = [self.num_samples*s for s in self.split]
         indices = np.cumsum(indices)
-        return indices
+        indices = np.round(indices)
+        return indices.astype(np.int)
 
     def __get_log_tf_data(self,i,files):
-        logging.info(f' Number of images for Partition {i}: {len(files)}')
+        print(f' Number of images for Partition {i}: {len(files)}')
         return self.__generate_tf_data(files) 
 
     def __call__(self,):
         indices = self.__get_indices_partition()
-        print(indices)
         p_files = np.split(self.file_images,indices)
         p_files = [p_file for p_file in p_files if p_file.size]
 
