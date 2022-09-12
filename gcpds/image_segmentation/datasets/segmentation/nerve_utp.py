@@ -1,3 +1,30 @@
+"""
+Nerve-UTP: This dataset was acquired by the Universidad Tecnológica de
+Pereira (https://www.utp.edu.co, accessed on 17 November 2021) and the
+Santa Mónica Hospital, Dosquebradas, Colombia. It contains 691 images
+of the following nerve structures: the sciatic nerve (287 instances),
+the ulnar nerve (221 instances), the median nerve (41 instances), and 
+the femoral nerve (70 instances). A SONOSITE Nano-Maxx device was used, 
+fixing a 640 × 480 pixel resolution. Each image was labeled by an 
+anesthesiologist from the Santa Mónica Hospital. As prepossessing, 
+morphological operations such as dilation and erosion were applied. 
+Next, we defined a region of interest by computing the bounding box 
+around each nerve structure. As a result, we obtained images holding 
+a maximum resolution of 360 × 279 pixels. Lastly, we applied a data 
+augmentation scheme to obtain the following samples: 861 sciatic nerve
+images, 663 ulnar nerve images, 123 median nerve images, and 210 
+femoral nerve images (1857 input samples).
+
+
+Random Fourier Features-Based Deep Learning Improvement with Class 
+Activation Interpretability for Nerve Structure Segmentation
+https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8617795/
+"""
+
+
+
+
+
 import logging
 import os
 from glob import glob
@@ -93,13 +120,3 @@ class NerveUtp:
             return partitions[0]
         
         return partitions
-
-
-
-
-
-
-
-
-
-

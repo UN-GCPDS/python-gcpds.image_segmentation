@@ -19,6 +19,6 @@ for img, mask, label in train_dataset.take(1):
     plt.subplot(1,2,2)
     plt.imshow(mask[0,...,0])
     plt.colorbar()
-    plt.suptitle(str(label))
+    plt.suptitle(label.numpy()[0].decode())
 
 plt.show()
