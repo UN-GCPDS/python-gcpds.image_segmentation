@@ -24,8 +24,7 @@ def kernel_initializer(seed):
     return tf.keras.initializers.GlorotUniform(seed=seed)
 
 
-def fcn_baseline(input_shape=(128,128,3), name='FCN', out_channels=1):
-
+def fcn_baseline(input_shape=(128,128,3), name='FCN', out_channels=1, out_ActFunction='sigmoid'):
     # Encoder 
     input_ = layers.Input(shape=input_shape)
 
@@ -80,7 +79,7 @@ def fcn_baseline(input_shape=(128,128,3), name='FCN', out_channels=1):
     x =  layers.Add(name='Add20')([x,level_4])
 
     x = DefaultTranspConv(out_channels,kernel_size=16,strides=8,
-                            activation='sigmoid',use_bias=True,
+                            activation=out_ActFunction,use_bias=True,
                             kernel_initializer=kernel_initializer(32),
                             name='Trans80')(x)
 
