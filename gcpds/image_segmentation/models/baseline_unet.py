@@ -19,8 +19,7 @@ upsample = partial(layers.UpSampling2D, (2,2))
 def kernel_initializer(seed):
     return tf.keras.initializers.GlorotUniform(seed=seed)
 
-def unet_baseline(input_shape=(128,128,3), name='UNET', out_channels=1):
-
+def unet_baseline(input_shape=(128,128,3), name='UNET', out_channels=1, out_ActFunction='sigmoid'):
     # Encoder 
     input = layers.Input(shape=input_shape)
 
@@ -87,7 +86,7 @@ def unet_baseline(input_shape=(128,128,3), name='UNET', out_channels=1):
     x = DefaultConv2D(8,kernel_initializer=kernel_initializer(7),name='Conv91')(x)
     x = layers.BatchNormalization(name='Batch91')(x)
 
-    x = DefaultConv2D(out_channels,kernel_size=(1,1),activation='sigmoid',
+    x = DefaultConv2D(out_channels,kernel_size=(1,1),activation=out_ActFunction,
                         kernel_initializer=kernel_initializer(42),
                         name='Conv100')(x)
 

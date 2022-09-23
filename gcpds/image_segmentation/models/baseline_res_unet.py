@@ -39,7 +39,7 @@ def res_block(x,units,kernel_initializer,name):
     return x
 
 
-def res_unet_baseline(input_shape=(128,128,3), name='RES_UNET'):
+def res_unet_baseline(input_shape=(128,128,3), name='RES_UNET', out_channels=1, out_ActFunction='sigmoid'):
     input_ = layers.Input(shape=input_shape, name='input')
 
     pp_in_layer = input_
@@ -96,7 +96,7 @@ def res_unet_baseline(input_shape=(128,128,3), name='RES_UNET'):
     c9 = res_block(u9,8,kernel_initializer=kernel_initializer(4),name='Res16')
     c9 = res_block(c9,8,kernel_initializer=kernel_initializer(6),name='Res17')
 
-    d = layers.Conv2D(1, (1, 1), activation='sigmoid',name='Output') (c9)
+    d = layers.Conv2D(out_channels, kernel_size=(1, 1), activation=out_ActFunction,name='Output') (c9)
     
     seg_model = Model(inputs=[input_], outputs=[d])
     
