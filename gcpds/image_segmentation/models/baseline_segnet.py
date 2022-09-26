@@ -90,7 +90,7 @@ class MaxUnpooling2D(Layer):
             mask_shape[3],
         )
 
-def get_model(input_shape=(128,128,3), name='SEGNET', out_channels=1, out_ActFunction='sigmoid', kernel = 3, ActFunction = 'selu'):
+def segnet_baseline(input_shape=(128,128,3), name='SEGNET', out_channels=1, out_ActFunction='sigmoid', kernel = 3, ActFunction = 'selu'):
     Input = tf.keras.Input(shape=input_shape, name='Input')
     #***********************************************************************Encoder***********************************************************************
     Conv1 = Conv2D(filters=64, kernel_size=(kernel,kernel), padding='same', activation=ActFunction, data_format='channels_last', name='Conv1')(Input)
