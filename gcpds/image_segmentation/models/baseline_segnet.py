@@ -49,7 +49,7 @@ class MaxUnpooling2D(Layer):
         self.size = size
     def call(self, inputs, output_shape=None):
         updates, mask = inputs[0], inputs[1]
-        with variable_scope(self.name):
+        with tf.compat.v1.variable_scope(self.name):
             mask = K.cast(mask, "int32")
             input_shape = K.tf.shape(updates, out_type="int32")
             #  calculation new shape
