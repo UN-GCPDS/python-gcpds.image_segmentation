@@ -24,6 +24,9 @@ class Sensitivity(Metric):
     def result(self):
         return self.total/self.count 
 
+    def compute(self,y_true, y_pred):
+        return self.sensitivity(y_true, y_pred, self.target_class)
+
     @staticmethod
     def sensitivity(y_true, y_pred, target_class=None):
         y_true = tf.cast(y_true > 0.5,tf.float32)

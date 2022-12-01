@@ -19,14 +19,14 @@ class DiceCoeficienteMetric(Metric):
         
 
     def update_state(self, y_true, y_pred, sample_weight=None):
-        metric = self.dice(y_true, y_pred)
+        metric = self.compute(y_true, y_pred)
         self.total.assign_add(tf.reduce_sum(metric))
         self.count.assign_add(tf.cast(tf.shape(y_true)[0], tf.float32))
     
     def result(self):
         return self.total/self.count 
 
-    def dice(self, y_true, y_pred):
+    def compute(self, y_true, y_pred):
         intersection = K.sum(y_true * y_pred, axis=[1,2])
         union = K.sum(y_true,axis=[1,2]) + K.sum(y_pred,axis=[1,2])
         dice_coef = -(2. * intersection + self.smooth) /(union + self.smooth)

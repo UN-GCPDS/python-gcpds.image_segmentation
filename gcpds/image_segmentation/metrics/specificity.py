@@ -24,6 +24,9 @@ class Specificity(Metric):
     
     def result(self):
         return self.total/self.count 
+
+    def compute(self,y_true, y_pred):
+        return self.specificity(y_true, y_pred, self.target_class)
     
     @staticmethod
     def specificity(y_true, y_pred, target_class=None):
