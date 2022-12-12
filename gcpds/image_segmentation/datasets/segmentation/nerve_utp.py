@@ -23,8 +23,6 @@ https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8617795/
 
 
 
-
-
 import logging
 import os
 from glob import glob
@@ -86,13 +84,16 @@ class NerveUtp:
                 img = cv2.imread(f'{root_name}.png')/255
                 mask = cv2.imread(f'{root_name}_mask.png')
                 mask = NerveUtp.__preprocessing_mask(mask)
-                label = os.path.split(root_name)[-1].split('_')[0]
-                yield img, mask, label
+                name_image = os.path.split(root_name)[-1]
+                label = name_image.split('_')[0]
+                id_image = name_image.split('.')[0]
+                yield img, mask, label, id_image 
         return generator
 
     def __generate_tf_data(self,files):
         output_signature = (tf.TensorSpec((None,None,None), tf.float32), 
                             tf.TensorSpec((None,None,None), tf.float32),
+                            tf.TensorSpec(None, tf.string),
                             tf.TensorSpec(None, tf.string))
 
         return tf.data.Dataset.from_generator(self.__gen_dataset(files),
