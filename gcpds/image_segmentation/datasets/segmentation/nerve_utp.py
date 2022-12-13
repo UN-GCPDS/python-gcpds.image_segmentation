@@ -77,12 +77,12 @@ class NerveUtp:
         mask = mask.astype(np.float32)
         return mask[...,None]
 
-    def load_instance(self, id_img):
+    def load_instance_by_id(self, id_img):
         root_name = os.path.join(self.__path_images, id_img)
-        return self.__load_instance(root_name)
+        return self.load_instance(root_name)
 
     @staticmethod
-    def __load_instance(root_name):
+    def load_instance(root_name):
         img = cv2.imread(f'{root_name}.png')/255
         mask = cv2.imread(f'{root_name}_mask.png')
         mask = NerveUtp.__preprocessing_mask(mask)
@@ -95,7 +95,7 @@ class NerveUtp:
     def __gen_dataset(file_images):
         def generator():
             for root_name in file_images:
-                yield self.__load_instance(root_name)
+                yield NerveUtp.load_instance(root_name)
         return generator
 
     def __generate_tf_data(self,files):
