@@ -48,8 +48,8 @@ class NerveUtp:
                                             'ImagenesNervios_')
         self.__set_env()
 
-        self.file_images = glob(os.path.join(self.__path_images,'*[!(mask)].png'))
-        self.file_images = list(map(lambda x: x[:-4],self.file_images))
+        self.file_images = glob(os.path.join(self.__path_images, '*[!(mask)].png'))
+        self.file_images = list(map(lambda x: x[:-4], self.file_images))
         self.file_images.sort()
         np.random.seed(seed)  
         np.random.shuffle(self.file_images)
@@ -77,17 +77,25 @@ class NerveUtp:
         mask = mask.astype(np.float32)
         return mask[...,None]
 
+    def load_instance(self, id_img):
+        root_name = os.path.join(self.__path_images, id_img)
+        return __load_instance(root_name)
+
+    @staticmethod
+    def __load_instance(root_name):
+        img = cv2.imread(f'{root_name}.png')/255
+        mask = cv2.imread(f'{root_name}_mask.png')
+        mask = NerveUtp.__preprocessing_mask(mask)
+        id_image = os.path.split(root_name)[-1]
+        label = id_image.split('_')[0]
+        return img, mask, label, id_image 
+
+
     @staticmethod
     def __gen_dataset(file_images):
         def generator():
             for root_name in file_images:
-                img = cv2.imread(f'{root_name}.png')/255
-                mask = cv2.imread(f'{root_name}_mask.png')
-                mask = NerveUtp.__preprocessing_mask(mask)
-                name_image = os.path.split(root_name)[-1]
-                label = name_image.split('_')[0]
-                id_image = name_image.split('.')[0]
-                yield img, mask, label, id_image 
+                yield self.__load_instance(root_name)
         return generator
 
     def __generate_tf_data(self,files):
