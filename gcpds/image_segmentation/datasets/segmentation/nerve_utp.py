@@ -79,7 +79,7 @@ class NerveUtp:
 
     def load_instance(self, id_img):
         root_name = os.path.join(self.__path_images, id_img)
-        return __load_instance(root_name)
+        return self.__load_instance(root_name)
 
     @staticmethod
     def __load_instance(root_name):
