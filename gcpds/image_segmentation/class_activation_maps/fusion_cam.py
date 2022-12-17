@@ -9,12 +9,14 @@ from .score import SegScore
 
 class FusionCam:
     def __init__(self, callable_cam : Callable, dataset : tf.data, layers : Iterable, 
-                 target_class: int):
+                 target_class: int,  logits: bool = False):
         self.callable_cam = callable_cam
         self.dataset = dataset
         self.layers = layers 
         self.target_class = target_class 
+        self.logits = logits 
         self.weights = self._get_weigths()
+        
 
 
     def _get_weigths(self,):
@@ -28,7 +30,8 @@ class FusionCam:
             for j,(img,mask) in enumerate(dataset):
                 dataset.set_postfix({'Bacth ': j+1})
                 cam = self.callable_cam(SegScore(mask,
-                                                 target_class=self.target_class), 
+                                                 target_class=self.target_class,
+                                                 logits=self.logits), 
                                         img,
                                         penultimate_layer=layer,
                                         seek_penultimate_conv_layer=False,
@@ -58,7 +61,8 @@ class FusionCam:
             for j,(img,mask) in enumerate(dataset_):
                 dataset_.set_postfix({'Bacth ': j})
                 cam = self.callable_cam(SegScore(mask,
-                                                 target_class=self.target_class), 
+                                                 target_class=self.target_class,
+                                                 logits=self.logits), 
                                         img,
                                         penultimate_layer=layer,
                                         seek_penultimate_conv_layer=False)
