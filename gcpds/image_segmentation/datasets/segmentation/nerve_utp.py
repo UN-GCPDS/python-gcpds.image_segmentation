@@ -33,11 +33,11 @@ import tensorflow as tf
 from gcpds.image_segmentation.datasets.utils import download_from_drive
 from gcpds.image_segmentation.datasets.utils import unzip
 from gcpds.image_segmentation.datasets.utils import listify
-
+from sklearn.model_selection import train_test_split
 
 
 class NerveUtp:
-    def __init__(self, split=1.0, seed=42):
+    def __init__(self, split=[0.2,0.2], seed: int=42):
         self.split = listify(split)
         self.seed = seed 
 
@@ -51,9 +51,11 @@ class NerveUtp:
         self.file_images = glob(os.path.join(self.__path_images, '*[!(mask)].png'))
         self.file_images = list(map(lambda x: x[:-4], self.file_images))
         self.file_images.sort()
-        np.random.seed(seed)  
-        np.random.shuffle(self.file_images)
 
+        self.labels =  list(map(lambda x: os.path.split(x)[-1].split('_')[0],
+                            self.file_images))
+
+    
         self.num_samples = len(self.file_images)
         self.labels_info = self.__get_labels_info()
 
@@ -65,9 +67,7 @@ class NerveUtp:
         unzip(destination_path_zip, self.__folder)
 
     def __get_labels_info(self,):
-        unique_labels = map(lambda x: os.path.split(x)[-1].split('_')[0],
-                            self.file_images)
-        unique_labels, counts = np.unique(list(unique_labels), return_counts=True)
+        unique_labels, counts = np.unique(self.labels, return_counts=True)
         labels_info = {label:count for label,count in zip(unique_labels,counts)}
         return labels_info
 
@@ -108,24 +108,26 @@ class NerveUtp:
                                     output_signature = output_signature)
 
 
-    def __get_indices_partition(self):
-        indices = [self.num_samples*s for s in self.split]
-        indices = np.cumsum(indices)
-        indices = np.round(indices)
-        return indices.astype(np.int)
-
     def __get_log_tf_data(self,i,files):
         print(f' Number of images for Partition {i}: {len(files)}')
         return self.__generate_tf_data(files) 
 
     def __call__(self,):
-        indices = self.__get_indices_partition()
-        p_files = np.split(self.file_images,indices)
-        p_files = [p_file for p_file in p_files if p_file.size]
 
+        train_imgs, test_imgs, l_train, _ = train_test_split(self.file_images,
+                                                            self.labels,
+                                                            test_size=self.split[0],
+                                                            stratify = self.labels,
+                                                            random_state=self.seed)
+
+        train_imgs, val_imgs, _ , _ = train_test_split(train_imgs, l_train,
+                                                           test_size=self.split[1],
+                                                           stratify = l_train,
+                                                           random_state=self.seed )
+
+        
+        p_files = [train_imgs, val_imgs, test_imgs]
+        
         partitions = [self.__get_log_tf_data(i+1,p) for i,p in enumerate(p_files)]
 
-        if len(partitions) ==1:
-            return partitions[0]
-        
         return partitions
