@@ -21,7 +21,8 @@ setup(
     install_requires=['scikit-image',
                      'matplotlib',
                      'gdown',
-                     'opencv-python'      
+                     'opencv-python',
+                     'scikit-learn'  
     ],
 
     include_package_data=True,
