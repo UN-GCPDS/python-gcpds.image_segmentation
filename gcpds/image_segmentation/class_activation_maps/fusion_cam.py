@@ -16,7 +16,13 @@ class FusionCam:
         self.target_class = target_class 
         self.logits = logits 
         self.weights = self._get_weigths()
-        
+
+
+    @staticmethod
+    def normalize_weigths(weights):
+        normalize_weights = weights/np.max(weights)
+        normalize_weights = tf.math.softmax(normalize_weights)
+        return normalize_weights
 
 
     def _get_weigths(self,):
@@ -42,13 +48,11 @@ class FusionCam:
             values = np.array(values)
             weights[i] = np.mean(values)
 
-        normalize_weights = weights/np.max(weights)
-        normalize_weights = tf.math.softmax(normalize_weights)
-
-        return normalize_weights
+        return weights
     
 
-    def __call__(self, dataset: tf.data):
+    def __call__(self, dataset: tf.data, norm_weights: bool=True):
+        weights = FusionCam.normalize_weigths(self.weights) if norm_weights else self.weights
 
         layers = tqdm(self.layers)
         result = 0 
@@ -68,7 +72,7 @@ class FusionCam:
                                         seek_penultimate_conv_layer=False)
                 cams.append(cam)
                 imgs.append(img)          
-            result += self.weights[i]*np.vstack(cams)
+            result += weights[i]*np.vstack(cams)
         min_ = tf.reduce_min(result,axis=[1,2],keepdims=True)
         max_ = tf.reduce_max(result,axis=[1,2],keepdims=True)
         result = (result  - min_) /(max_ - min_)
