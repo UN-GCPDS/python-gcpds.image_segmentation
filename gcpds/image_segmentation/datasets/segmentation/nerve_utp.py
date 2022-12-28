@@ -49,9 +49,9 @@ class NerveUtp:
         self.__path_images =  os.path.join(self.__folder,
                                             'ImagenesNervios_')
                                             
-        if not BrachialPlexus.already_unzipped:
+        if not NerveUtp.already_unzipped:
             self.__set_env()
-            BrachialPlexus.already_unzipped = True
+            NerveUtp.already_unzipped = True
 
         self.file_images = glob(os.path.join(self.__path_images, '*[!(mask)].png'))
         self.file_images = list(map(lambda x: x[:-4], self.file_images))
