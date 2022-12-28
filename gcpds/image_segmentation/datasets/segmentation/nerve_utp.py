@@ -37,6 +37,7 @@ from sklearn.model_selection import train_test_split
 
 
 class NerveUtp:
+    already_unzipped = False
     def __init__(self, split=[0.2,0.2], seed: int=42):
         self.split = listify(split)
         self.seed = seed 
@@ -46,7 +47,10 @@ class NerveUtp:
                                      'Datasets','nerviosUTP')
         self.__path_images =  os.path.join(self.__folder,
                                             'ImagenesNervios_')
-        self.__set_env()
+                                            
+        if not BrachialPlexus.already_unzipped:
+            self.__set_env()
+            BrachialPlexus.already_unzipped = True
 
         self.file_images = glob(os.path.join(self.__path_images, '*[!(mask)].png'))
         self.file_images = list(map(lambda x: x[:-4], self.file_images))

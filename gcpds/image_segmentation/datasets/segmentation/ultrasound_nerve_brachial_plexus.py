@@ -39,6 +39,7 @@ class BrachialPlexus:
 
         if not BrachialPlexus.already_unzipped:
             self.__set_env()
+            BrachialPlexus.already_unzipped = True
 
         self.file_images = glob(os.path.join(self.__path_images, '*[!(mask)].*'))
         self.file_images = map(lambda x: x[:-4], self.file_images)
@@ -58,12 +59,10 @@ class BrachialPlexus:
         os.makedirs(self.__folder, exist_ok=True)
         download_from_drive(self.__id, destination_path_zip)
         unzip(destination_path_zip, self.__folder)
-        BrachialPlexus.already_unzipped = True
 
     @staticmethod
     def __preprocessing_mask(mask):
-        mask = mask[...,0] > 0.5 
-        mask = mask.astype(np.float32)
+        mask = mask[...,0]/255
         return mask[...,None]
 
     def load_instance_by_id(self, id_img):
@@ -73,7 +72,8 @@ class BrachialPlexus:
     @staticmethod
     def load_instance(root_name):
         img = cv2.imread(f'{root_name}.tif')/255
-        mask = cv2.imread(f'{root_name}_mask.tif')/255
+        img = img[...,0][...,None]
+        mask = cv2.imread(f'{root_name}_mask.tif')
         mask = BrachialPlexus.__preprocessing_mask(mask)
         id_image = os.path.split(root_name)[-1]
         return img, mask, id_image 
