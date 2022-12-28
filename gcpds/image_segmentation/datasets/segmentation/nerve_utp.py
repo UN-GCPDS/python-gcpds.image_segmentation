@@ -34,6 +34,7 @@ from gcpds.image_segmentation.datasets.utils import download_from_drive
 from gcpds.image_segmentation.datasets.utils import unzip
 from gcpds.image_segmentation.datasets.utils import listify
 from sklearn.model_selection import train_test_split
+from collections import Counter
 
 
 class NerveUtp:
@@ -61,7 +62,7 @@ class NerveUtp:
 
     
         self.num_samples = len(self.file_images)
-        self.labels_info = self.__get_labels_info()
+        self.labels_info = Counter(self.labels)
 
     def __set_env(self):
         destination_path_zip = os.path.join(self.__folder,
@@ -69,11 +70,6 @@ class NerveUtp:
         os.makedirs(self.__folder, exist_ok=True)
         download_from_drive(self.__id, destination_path_zip)
         unzip(destination_path_zip, self.__folder)
-
-    def __get_labels_info(self,):
-        unique_labels, counts = np.unique(self.labels, return_counts=True)
-        labels_info = {label:count for label,count in zip(unique_labels,counts)}
-        return labels_info
 
     @staticmethod
     def __preprocessing_mask(mask):
@@ -88,6 +84,7 @@ class NerveUtp:
     @staticmethod
     def load_instance(root_name):
         img = cv2.imread(f'{root_name}.png')/255
+        img = img[...,0][...,None]
         mask = cv2.imread(f'{root_name}_mask.png')
         mask = NerveUtp.__preprocessing_mask(mask)
         id_image = os.path.split(root_name)[-1]
