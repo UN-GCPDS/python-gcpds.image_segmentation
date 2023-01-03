@@ -91,8 +91,12 @@ class BrachialPlexus:
                             tf.TensorSpec(None, tf.string),
                             )
 
-        return tf.data.Dataset.from_generator(self.__gen_dataset(files),
+        dataset = tf.data.Dataset.from_generator(self.__gen_dataset(files),
                                     output_signature = output_signature)
+
+        len_files = len(files)
+        dataset = dataset.apply(tf.data.experimental.assert_cardinality(len_files))
+        return dataset
 
     def __get_log_tf_data(self,i,files):
         print(f' Number of images for Partition {i}: {len(files)}')
