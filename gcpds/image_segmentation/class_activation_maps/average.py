@@ -9,6 +9,13 @@ import tensorflow as tf
 from tensorflow.keras.backend import epsilon
 
 
+def avg_drop(Y_c, O_c):
+    return np.mean(np.maximum(0,(Y_c-O_c))/(Y_c+epsilon()))*100
+
+def avg_increase(Y_c, O_c):
+    return 100*np.mean(Y_c < O_c)
+
+
 class AveragesCam:
     """ 
     Set of metrics to measure influence of CAM in the ouput model score.
@@ -88,12 +95,12 @@ class AveragesCam:
 
         """
         Y_c, O_c = self._get_scores(cams, score_function)
-        avg_drop = np.mean(np.maximum(0,(Y_c-O_c))/(Y_c+epsilon()))*100
+        a_drop = avg_drop(Y_c, O_c)
 
         if return_vector:
-            return avg_drop,Y_c,O_c
+            return a_drop,Y_c,O_c
         else:
-            return avg_drop
+            return a_drop
 
 
     def average_increase(self, cams: tf.Tensor, score_function: Callable,
@@ -120,9 +127,9 @@ class AveragesCam:
 
         """
         Y_c, O_c = self._get_scores(cams, score_function)
-        avg_increase = 100*np.mean(Y_c < O_c)
+        a_increase = avg_increase(Y_c,O_c)
 
         if return_vector:
-            return avg_increase, Y_c, O_c
+            return a_increase, Y_c, O_c
         else:
-            return avg_increase
+            return a_increase
