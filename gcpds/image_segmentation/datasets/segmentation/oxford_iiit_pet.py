@@ -5,18 +5,19 @@ I still recommend using tfds to create the datasets
 """
 import tensorflow as tf
 import tensorflow_datasets as tfds
+from tensorflow.keras.utils import to_categorical
 
 class OxfordIiitPet:
-    def __init__(self, split=[70, 15, 15], seed: int=42):
-
+    def __init__(self, split=[70, 15, 15], seed: int=42, categorical: bool=True):
+        self.categorical = categorical
         self.split=OxfordIiitPet._get_splits(split)
         dataset, info = tfds.load('oxford_iiit_pet:3.*.*', with_info=True, split=self.split)
         self.info = info 
         self.train, self.val, self.test  = dataset
 
-        self.train = self.train.map(lambda x: OxfordIiitPet._keep_interface(x)) 
-        self.val= self.val.map(lambda x: OxfordIiitPet._keep_interface(x)) 
-        self.test = self.test.map(lambda x: OxfordIiitPet._keep_interface(x)) 
+        self.train = self.train.map(lambda x: self._keep_interface(x)) 
+        self.val= self.val.map(lambda x: self._keep_interface(x)) 
+        self.test = self.test.map(lambda x: self._keep_interface(x)) 
         self.labels_info = {0:'cat', 1:'dog'}
 
     def load_instance_by_id(self, id_img):
@@ -34,10 +35,10 @@ class OxfordIiitPet:
             splits_.append(f'train[{sum-percentage}%:{sum}%]')
         return splits_
 
-    @staticmethod
-    def _keep_interface(x):
+    def _keep_interface(self, x):
         img = tf.cast(x['image'], tf.float32)/255.
         mask = x['segmentation_mask']
+        mask = mask if not self.categorical else to_categorical(mask)
         label = x['species']
         id_image =  x['file_name']
         return img, mask, label, id_image 
