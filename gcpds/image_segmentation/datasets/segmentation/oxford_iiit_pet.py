@@ -5,11 +5,10 @@ I still recommend using tfds to create the datasets
 """
 import tensorflow as tf
 import tensorflow_datasets as tfds
-from tensorflow.keras.utils import to_categorical
 
 class OxfordIiitPet:
-    def __init__(self, split=[70, 15, 15], seed: int=42, categorical: bool=True):
-        self.categorical = categorical
+    def __init__(self, split=[70, 15, 15], seed: int=42, one_hot: bool=True):
+        self.one_hot = one_hot
         self.split=OxfordIiitPet._get_splits(split)
         dataset, info = tfds.load('oxford_iiit_pet:3.*.*', with_info=True, split=self.split)
         self.info = info 
@@ -35,10 +34,16 @@ class OxfordIiitPet:
             splits_.append(f'train[{sum-percentage}%:{sum}%]')
         return splits_
 
+    @staticmethod
+    def to_one_hot(mask):
+        unique, _ = tf.unique(tf.reshape(mask,(-1,)))
+        one_hot = tf.one_hot(mask, len(unique))
+        return tf.squeeze(one_hot)
+
     def _keep_interface(self, x):
         img = tf.cast(x['image'], tf.float32)/255.
         mask = x['segmentation_mask']
-        mask = mask if not self.categorical else to_categorical(mask)
+        mask = OxfordIiitPet.to_one_hot(mask) if self.one_hot else mask
         label = x['species']
         id_image =  x['file_name']
         return img, mask, label, id_image 
