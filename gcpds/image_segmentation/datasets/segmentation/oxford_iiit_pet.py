@@ -17,6 +17,7 @@ class OxfordIiitPet:
         self.train = self.train.map(lambda x: OxfordIiitPet._keep_interface(x)) 
         self.val= self.val.map(lambda x: OxfordIiitPet._keep_interface(x)) 
         self.test = self.test.map(lambda x: OxfordIiitPet._keep_interface(x)) 
+        self.labels_info = {0:'cat', 1:'dog'}
 
     def load_instance_by_id(self, id_img):
         for dataset in [self.train, self.val, self.test]:
@@ -37,7 +38,7 @@ class OxfordIiitPet:
     def _keep_interface(x):
         img = tf.cast(x['image'], tf.float32)/255.
         mask = x['segmentation_mask']
-        label = x['label']
+        label = x['species']
         id_image =  x['file_name']
         return img, mask, label, id_image 
 
