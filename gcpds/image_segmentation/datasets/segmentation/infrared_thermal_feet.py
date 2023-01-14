@@ -7,7 +7,7 @@ import tensorflow as tf
 from gcpds.image_segmentation.datasets.utils import download_from_drive
 from gcpds.image_segmentation.datasets.utils import unzip
 from gcpds.image_segmentation.datasets.utils import listify
-from sklearn.model_selection import GroupKFold
+from sklearn.model_selection import GroupShuffleSplit
 
 
 class InfraredThermalFeet:
@@ -19,13 +19,14 @@ class InfraredThermalFeet:
         self.__id = "1hx-Wakx8dYvgGsRZSwYpUxFZRFgYzRUH"
         self.__folder = os.path.join(os.path.dirname(__file__),
                                      'Datasets','InfraredThermalFeet')
-        self.__path_images =  self.__folder
+        self.__path_images =  os.path.join(self.__folder,
+                                            'dataset')
                                             
         if not InfraredThermalFeet.already_unzipped:
             self.__set_env()
             InfraredThermalFeet.already_unzipped = True
 
-        self.file_images = glob(os.path.join(self.__path_images, '*[!(mask)].png'))
+        self.file_images = glob(os.path.join(self.__path_images, '*[!(mask)].jpg'))
         self.file_images = list(map(lambda x: x[:-4], self.file_images))
         self.file_images.sort()
 
@@ -57,7 +58,7 @@ class InfraredThermalFeet:
         img = cv2.imread(f'{root_name}.jpg')/255
         img = img[...,0][...,None]
         mask = cv2.imread(f'{root_name}_mask.png')
-        mask = NerveUtp.__preprocessing_mask(mask)
+        mask = InfraredThermalFeet.__preprocessing_mask(mask)
         id_image = os.path.split(root_name)[-1]
         return img, mask, id_image 
 
@@ -66,7 +67,7 @@ class InfraredThermalFeet:
     def __gen_dataset(file_images):
         def generator():
             for root_name in file_images:
-                yield NerveUtp.load_instance(root_name)
+                yield InfraredThermalFeet.load_instance(root_name)
         return generator
 
     def __generate_tf_data(self,files):
@@ -92,13 +93,13 @@ class InfraredThermalFeet:
     def _train_test_split(X, groups, random_state=42,test_size=0.2):
         gss = GroupShuffleSplit(n_splits=1, test_size=test_size,
                                             random_state=random_state)
-        indxs_train, index_test = next(gss.split(X, y, groups))
+        indxs_train, index_test = next(gss.split(X, groups=groups))
         return X[indxs_train], X[index_test], groups[indxs_train], groups[index_test] 
         
 
     def __call__(self,):
-        files_images = np.array(files_images)
-        groups = np.array(groups)
+        file_images = np.array(self.file_images)
+        groups = np.array(self.groups)
         train_imgs, test_imgs, g_train, _ = InfraredThermalFeet._train_test_split(
                                                             file_images,
                                                             groups,
