@@ -1,2 +1,4 @@
 .. automodule:: image_segmentation.metrics.specificity
-   :no-undoc-members:
+   :members:
+   :undoc-members:
+   :show-inheritance:

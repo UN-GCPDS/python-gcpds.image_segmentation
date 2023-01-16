@@ -1,2 +1,4 @@
 .. automodule:: image_segmentation.datasets.segmentation.infrared_thermal_feet
-   :no-undoc-members:
+   :members:
+   :undoc-members:
+   :show-inheritance:

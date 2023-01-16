@@ -2,7 +2,9 @@ image\_segmentation.visualizations package
 ==========================================
 
 .. automodule:: image_segmentation.visualizations
-   :no-undoc-members:
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 Submodules
 ----------

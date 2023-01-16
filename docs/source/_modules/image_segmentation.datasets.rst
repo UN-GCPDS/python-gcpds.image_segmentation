@@ -2,7 +2,9 @@ image\_segmentation.datasets package
 ====================================
 
 .. automodule:: image_segmentation.datasets
-   :no-undoc-members:
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 Subpackages
 -----------

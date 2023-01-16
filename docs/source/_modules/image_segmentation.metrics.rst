@@ -2,7 +2,9 @@ image\_segmentation.metrics package
 ===================================
 
 .. automodule:: image_segmentation.metrics
-   :no-undoc-members:
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 Submodules
 ----------

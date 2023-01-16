@@ -2,7 +2,9 @@ image\_segmentation.class\_activation\_maps package
 ===================================================
 
 .. automodule:: image_segmentation.class_activation_maps
-   :no-undoc-members:
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 Submodules
 ----------

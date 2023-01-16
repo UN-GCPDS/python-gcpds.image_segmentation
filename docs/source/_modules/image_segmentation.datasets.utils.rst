@@ -1,2 +1,4 @@
 .. automodule:: image_segmentation.datasets.utils
-   :no-undoc-members:
+   :members:
+   :undoc-members:
+   :show-inheritance:
