@@ -3,6 +3,7 @@ image\_segmentation.class\_activation\_maps package
 
 .. automodule:: image_segmentation.class_activation_maps
    :undoc-members:
+   :members:
 
 Submodules
 ----------

@@ -90,7 +90,9 @@ class AveragesCam:
         Note
         ----
         The equation used is 
+
         .. math::
+        
             100\\frac{1}{N} \sum_{i=1}^N \\frac{max(0,Y_i^c - O_i^c)}{Y_i^c}
 
         """
@@ -122,7 +124,9 @@ class AveragesCam:
         Note
         ----
         The equation used is 
+
         .. math::
+
             100\\frac{1}{N} \sum_{i=1}^N Sign(Y_i^c < O_i^c)
 
         """

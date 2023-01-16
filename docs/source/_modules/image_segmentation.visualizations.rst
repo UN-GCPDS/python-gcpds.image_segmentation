@@ -3,6 +3,7 @@ image\_segmentation.visualizations package
 
 .. automodule:: image_segmentation.visualizations
    :undoc-members:
+   :members:
 
 Submodules
 ----------

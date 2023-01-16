@@ -3,6 +3,7 @@ image\_segmentation.metrics package
 
 .. automodule:: image_segmentation.metrics
    :undoc-members:
+   :members:
 
 Submodules
 ----------

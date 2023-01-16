@@ -2,6 +2,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.abspath('../../gcpds'))
+sys.path.insert(0, os.path.abspath('../../gcpds/image_segmentation'))
 
 
 # Configuration file for the Sphinx documentation builder.
@@ -20,6 +21,7 @@ author = 'Juan Carlos Aguirre Arango'
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
+        'sphinx.ext.mathjax',
         'nbsphinx',
         'dunderlab.docs'
         ]

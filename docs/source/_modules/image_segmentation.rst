@@ -3,6 +3,7 @@ image\_segmentation package
 
 .. automodule:: image_segmentation
    :undoc-members:
+   :members:
 
 Subpackages
 -----------

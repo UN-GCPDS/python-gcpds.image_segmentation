@@ -3,6 +3,7 @@ image\_segmentation.datasets.classification package
 
 .. automodule:: image_segmentation.datasets.classification
    :undoc-members:
+   :members:
 
 Submodules
 ----------
