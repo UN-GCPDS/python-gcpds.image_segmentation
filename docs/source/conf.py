@@ -1,7 +1,7 @@
 import os
 import sys
 
-sys.path.insert(0, os.path.abspath('../../gcpds/image_segmentation'))
+sys.path.insert(0, os.path.abspath('../../gcpds'))
 
 
 # Configuration file for the Sphinx documentation builder.
