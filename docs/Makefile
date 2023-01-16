@@ -1,3 +1,5 @@
+#export SPHINX_APIDOC_OPTIONS=members,no-undoc-members,no-show-inheritance
+export SPHINX_APIDOC_OPTIONS=no-undoc-members
 # Minimal makefile for Sphinx documentation
 #
 

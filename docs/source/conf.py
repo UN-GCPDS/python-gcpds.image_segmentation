@@ -34,3 +34,41 @@ exclude_patterns = []
 
 html_theme = 'alabaster'
 html_static_path = ['_static']
+
+
+autodoc_mock_imports = [
+    'IPython',
+    'numpy',
+    'scipy',
+    'mne',
+    'matplotlib',
+    'matplotlib.rcParams',
+    'google',
+    'colorama',
+    'tqdm',
+    'pandas',
+    'tables',
+    'pyedflib',
+    'netifaces',
+    'nmap',
+    'rawutil',
+    'kafka',
+    'rpyc',
+    'serial',
+    'openbci_stream',
+    'gcpds',
+    'figurestream',
+    'qt_material',
+    'browser',
+    'seaborn',
+    'simple_pid',
+    'pacman',
+    'points',
+    'tensorflow',
+    'skimage',
+    'cv2',
+    'sklearn',
+    'keras',
+    'gdown',
+    'tensorflow_datasets',
+]
