@@ -1,5 +1,5 @@
-gcpds.image_segmentation
-========================
+GCPDS - Image Segmentation
+==========================
 
 Install
 -------

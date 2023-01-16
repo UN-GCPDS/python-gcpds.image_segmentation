@@ -2,9 +2,7 @@ image\_segmentation package
 ===========================
 
 .. automodule:: image_segmentation
-   :members:
    :undoc-members:
-   :show-inheritance:
 
 Subpackages
 -----------

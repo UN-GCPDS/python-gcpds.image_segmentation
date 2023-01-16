@@ -2,9 +2,7 @@ image\_segmentation.losses package
 ==================================
 
 .. automodule:: image_segmentation.losses
-   :members:
    :undoc-members:
-   :show-inheritance:
 
 Submodules
 ----------
