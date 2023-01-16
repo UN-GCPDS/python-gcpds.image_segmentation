@@ -1,0 +1,4 @@
+.. automodule:: image_segmentation.models.baseline_fcn
+   :members:
+   :undoc-members:
+   :show-inheritance:
