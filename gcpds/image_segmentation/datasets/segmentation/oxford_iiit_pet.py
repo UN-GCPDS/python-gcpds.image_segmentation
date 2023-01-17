@@ -5,11 +5,12 @@ I still recommend using tfds to create the datasets
 """
 import tensorflow as tf
 import tensorflow_datasets as tfds
+from functools import lru_cache
 
 class OxfordIiitPet:
     def __init__(self, split=[70, 15, 15], seed: int=42, one_hot: bool=True):
         self.one_hot = one_hot
-        self.split=OxfordIiitPet._get_splits(split)
+        self.split= OxfordIiitPet._get_splits(split)
         dataset, info = tfds.load('oxford_iiit_pet:3.*.*', with_info=True, split=self.split)
         self.info = info 
         self.train, self.val, self.test  = dataset
@@ -19,6 +20,7 @@ class OxfordIiitPet:
         self.test = self.test.map(lambda x: self._keep_interface(x)) 
         self.labels_info = {0:'cat', 1:'dog'}  
 
+    @lru_cache(maxsize=None)
     def load_instance_by_id(self, id_img):
         for dataset in [self.train, self.val, self.test]:
             dataset = dataset.filter(lambda img, mask, label, id_image : id_image ==id_img)
