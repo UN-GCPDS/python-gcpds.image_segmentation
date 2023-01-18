@@ -1,16 +1,21 @@
 """
-Nerve segment dataset (NSD): This dataset belongs to the Kaggle 
-Competition repository [42]. It holds labeled ultrasound images of 
+=====================
+Nerve segment dataset
+=====================
+
+`This dataset belongs to the Kaggle Competition repository`_. It holds labeled ultrasound images of 
 the neck concerning the brachial plexus (BP). In particular,
 47 different subjects were studied, recording 119 to 580 images 
 per subject (5635 as a whole) at 420 × 580 pixel resolution. 
 For concrete testing, we performed a pruning procedure to remove
-images with inconsistent annotations as suggested by authors in 
-[18–20], yielding to 2323 samples.
+images with inconsistent annotations, yielding to 2323 samples[1].
 
-Random Fourier Features-Based Deep Learning Improvement with Class 
-Activation Interpretability for Nerve Structure Segmentation
-https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8617795/
+
+.. [1] `Random Fourier Features-Based Deep Learning Improvement with Class Activation Interpretability for Nerve Structure Segmentation`_
+
+.. _`Random Fourier Features-Based Deep Learning Improvement with Class Activation Interpretability for Nerve Structure Segmentation`: http://www.sdss.org/dr14/help/glossary/#stripe
+
+.. _`This dataset belongs to the Kaggle Competition repository`: https://www.kaggle.com/competitions/ultrasound-nerve-segmentation/data
 """
 
 

@@ -1,3 +1,9 @@
+"""
+===============================
+Infrared Thermal Images of Feet
+===============================
+"""
+
 import os
 from glob import glob
 

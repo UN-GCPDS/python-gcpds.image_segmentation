@@ -1,17 +1,31 @@
 """
-* https://github.com/cralji/RFF-Nerve-UTP
-* https://stats.stackexchange.com/questions/285640/multi-categorical-dice-loss
-* "It is also preferable to return a tensor containing one loss per instance, rather
-than returning the mean loss. This way, Keras can apply class weights or sample
-weights when requested" - Hands on machine learning with Scikit-Learn and TensorFlow
+====================
+Dice Cofficient Loss
+====================
+
+.. math:: -2\\frac{|\mathcal{M} \otimes \hat{\mathcal{M}}|}{|\mathcal{M}| - |\hat{\mathcal{M}}|}
+
+ 
+.. [1] `Random Fourier Features-Based Deep Learning Improvement with Class Activation Interpretability for Nerve Structure Segmentation`_
+
+.. [2] `Multi categorical Dice loss?`_
+
+.. [3] `RFF-Nerve-UTP`_
+
+
+.. _`Random Fourier Features-Based Deep Learning Improvement with Class Activation Interpretability for Nerve Structure Segmentation`: http://www.sdss.org/dr14/help/glossary/#stripe
+
+.. _`Multi categorical Dice loss?`: https://stats.stackexchange.com/questions/285640/multi-categorical-dice-loss
+
+.. _`RFF-Nerve-UTP`: https://github.com/cralji/RFF-Nerve-UTP
 """
 
 from tensorflow.keras.losses import Loss
 from tensorflow.keras import backend as K
 from tensorflow.keras.utils import to_categorical
 
-class DiceCoeficiente(Loss):
-    def __init__(self, smooth=1., target_class= None, name='DiceCoeficiente', **kwargs):
+class DiceCoefficient(Loss):
+    def __init__(self, smooth=1., target_class= None, name='DiceCoefficient', **kwargs):
         self.smooth = smooth
         self.target_class = target_class
         super().__init__(name=name,**kwargs)
@@ -35,7 +49,7 @@ class DiceCoeficiente(Loss):
                 "target_class":self.target_class}
 
 
-class SparseCategoricalDiceCoeficiente(DiceCoeficiente):
+class SparseCategoricalDiceCoefficient(DiceCoefficient):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 

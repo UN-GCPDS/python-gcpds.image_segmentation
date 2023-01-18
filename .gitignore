@@ -6,3 +6,4 @@ python-gcpds.image_segmentation.code-workspace
 build
 dist
 gcpds_image_segmentation.egg-info
+.vscode

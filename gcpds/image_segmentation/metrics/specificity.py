@@ -1,5 +1,15 @@
 """
-https://github.com/cralji/RFF-Nerve-UTP
+====================
+Specificity Metric
+====================
+ 
+.. [1] `Random Fourier Features-Based Deep Learning Improvement with Class Activation Interpretability for Nerve Structure Segmentation`_
+
+.. [2] `RFF-Nerve-UTP`_
+
+.. _`Random Fourier Features-Based Deep Learning Improvement with Class Activation Interpretability for Nerve Structure Segmentation`: http://www.sdss.org/dr14/help/glossary/#stripe
+
+.. _`RFF-Nerve-UTP`: https://github.com/cralji/RFF-Nerve-UTP
 """
 
 from tensorflow.keras.metrics import Metric

@@ -5,6 +5,14 @@ image\_segmentation.datasets.segmentation package
    :undoc-members:
    :members:
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   image_segmentation.datasets.segmentation.sintetic_dataset
+
 Submodules
 ----------
 

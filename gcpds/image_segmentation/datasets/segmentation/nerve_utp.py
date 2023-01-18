@@ -1,5 +1,9 @@
 """
-Nerve-UTP: This dataset was acquired by the Universidad Tecnológica de
+=========
+Nerve-UTP
+=========
+
+This dataset was acquired by the Universidad Tecnológica de
 Pereira (https://www.utp.edu.co, accessed on 17 November 2021) and the
 Santa Mónica Hospital, Dosquebradas, Colombia. It contains 691 images
 of the following nerve structures: the sciatic nerve (287 instances),
@@ -13,12 +17,12 @@ around each nerve structure. As a result, we obtained images holding
 a maximum resolution of 360 × 279 pixels. Lastly, we applied a data 
 augmentation scheme to obtain the following samples: 861 sciatic nerve
 images, 663 ulnar nerve images, 123 median nerve images, and 210 
-femoral nerve images (1857 input samples).
+femoral nerve images (1857 input samples)[1].
 
 
-Random Fourier Features-Based Deep Learning Improvement with Class 
-Activation Interpretability for Nerve Structure Segmentation
-https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8617795/
+.. [1] `Random Fourier Features-Based Deep Learning Improvement with Class Activation Interpretability for Nerve Structure Segmentation`_
+
+.. _`Random Fourier Features-Based Deep Learning Improvement with Class Activation Interpretability for Nerve Structure Segmentation`: http://www.sdss.org/dr14/help/glossary/#stripe
 """
 
 

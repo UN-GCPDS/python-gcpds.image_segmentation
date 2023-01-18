@@ -1,5 +1,7 @@
 """
-Average drop and average increase metrics
+=========================================
+Average Drop and Average Increase Metrics
+=========================================
 """
 
 from typing import Callable

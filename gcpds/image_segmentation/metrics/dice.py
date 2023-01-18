@@ -1,5 +1,23 @@
 """
-https://github.com/cralji/RFF-Nerve-UTP
+====================
+Dice Cofficient Metric
+====================
+
+.. math:: -2\\frac{|\mathcal{M} \otimes \hat{\mathcal{M}}|}{|\mathcal{M}| - |\hat{\mathcal{M}}|}
+
+ 
+.. [1] `Random Fourier Features-Based Deep Learning Improvement with Class Activation Interpretability for Nerve Structure Segmentation`_
+
+.. [2] `Multi categorical Dice loss?`_
+
+.. [3] `RFF-Nerve-UTP`_
+
+
+.. _`Random Fourier Features-Based Deep Learning Improvement with Class Activation Interpretability for Nerve Structure Segmentation`: http://www.sdss.org/dr14/help/glossary/#stripe
+
+.. _`Multi categorical Dice loss?`: https://stats.stackexchange.com/questions/285640/multi-categorical-dice-loss
+
+.. _`RFF-Nerve-UTP`: https://github.com/cralji/RFF-Nerve-UTP
 """
 
 from tensorflow.keras.metrics import Metric
@@ -8,9 +26,9 @@ from tensorflow.keras import backend as K
 import tensorflow as tf 
 
 
-class DiceCoeficienteMetric(Metric):
+class DiceCoefficientMetric(Metric):
 
-    def __init__(self,smooth=1.0, target_class=None, name='DiceCoeficienteMetric',**kwargs):
+    def __init__(self,smooth=1.0, target_class=None, name='DiceCoefficientMetric',**kwargs):
         super().__init__(name=name,**kwargs)
         self.smooth = smooth
         self.target_class = target_class
@@ -45,7 +63,7 @@ class DiceCoeficienteMetric(Metric):
                 "target_class":self.target_class}
 
 
-class SparseCategoricalDiceCoeficienteMetric(DiceCoeficienteMetric):
+class SparseCategoricalDiceCoefficientMetric(DiceCoefficientMetric):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
