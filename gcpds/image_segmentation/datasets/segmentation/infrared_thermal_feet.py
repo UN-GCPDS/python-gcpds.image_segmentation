@@ -94,12 +94,20 @@ class InfraredThermalFeet:
         print(f' Number of images for Partition {i}: {len(files)}')
         return self.__generate_tf_data(files) 
 
+    @staticmethod
+    def __shuffle(X,seed):
+        np.random.seed(seed)
+        np.random.shuffle(X)
 
     @staticmethod
     def _train_test_split(X, groups, random_state=42,test_size=0.2):
         gss = GroupShuffleSplit(n_splits=1, test_size=test_size,
                                             random_state=random_state)
         indxs_train, index_test = next(gss.split(X, groups=groups))
+
+        InfraredThermalFeet.__shuffle(indxs_train, random_state)
+        InfraredThermalFeet.__shuffle(index_test, random_state)
+        
         return X[indxs_train], X[index_test], groups[indxs_train], groups[index_test] 
         
 
