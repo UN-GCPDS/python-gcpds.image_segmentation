@@ -22,4 +22,5 @@ Submodules
    image_segmentation.datasets.segmentation.infrared_thermal_feet
    image_segmentation.datasets.segmentation.nerve_utp
    image_segmentation.datasets.segmentation.oxford_iiit_pet
+   image_segmentation.datasets.segmentation.tomato_seeds
    image_segmentation.datasets.segmentation.ultrasound_nerve_brachial_plexus
