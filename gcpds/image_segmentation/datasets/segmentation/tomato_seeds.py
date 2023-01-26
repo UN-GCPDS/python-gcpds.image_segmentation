@@ -71,7 +71,6 @@ class TomatoSeeds:
         path_img = os.path.join(self.__path_images,id_img)
         path_mask = os.path.join(self.__path_masks,id_img)
         img = cv2.imread(f'{path_img}.jpg')/255
-        img = img[...,0][...,None]
         mask = cv2.imread(f'{path_mask}.png')
         mask = self.__preprocessing_mask(mask)
         id_image = id_img
