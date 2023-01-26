@@ -20,6 +20,7 @@ Dice Cofficient Loss
 .. _`RFF-Nerve-UTP`: https://github.com/cralji/RFF-Nerve-UTP
 """
 
+import tensorflow as tf 
 from tensorflow.keras.losses import Loss
 from tensorflow.keras import backend as K
 from tensorflow.keras.utils import to_categorical
