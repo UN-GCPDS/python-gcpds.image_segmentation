@@ -18,7 +18,7 @@ from sklearn.model_selection import GroupShuffleSplit
 
 class InfraredThermalFeet:
     already_unzipped = False
-    def __init__(self, split=[0.2,0.2], seed: int=70):
+    def __init__(self, split=[0.2,0.2], seed: int=42):
         self.split = listify(split)
         self.seed = seed 
 
