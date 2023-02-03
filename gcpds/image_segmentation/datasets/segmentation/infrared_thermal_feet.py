@@ -18,11 +18,13 @@ from sklearn.model_selection import GroupShuffleSplit
 
 class InfraredThermalFeet:
     already_unzipped = False
-    def __init__(self, split=[0.2,0.2], seed: int=42):
+    def __init__(self, split=[0.2,0.2], seed: int=42,
+                        id_: str="1HZa4pVwlIXCrRIidflB158kmtYGW23Qe"):
+
         self.split = listify(split)
         self.seed = seed 
 
-        self.__id = "1hx-Wakx8dYvgGsRZSwYpUxFZRFgYzRUH"
+        self.__id = id_
         self.__folder = os.path.join(os.path.dirname(__file__),
                                      'Datasets','InfraredThermalFeet')
         self.__path_images =  os.path.join(self.__folder,

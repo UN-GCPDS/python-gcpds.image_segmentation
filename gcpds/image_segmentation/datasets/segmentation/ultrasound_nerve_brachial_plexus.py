@@ -31,13 +31,16 @@ from gcpds.image_segmentation.datasets.utils import listify
 from sklearn.model_selection import train_test_split
 
 
+
 class BrachialPlexus:
     already_unzipped = False 
-    def __init__(self, split=[0.2,0.2], seed: int=42):
+    def __init__(self, split=[0.2,0.2], seed: int=42,
+                        id_: str='1In6sQgN2on6PMdqS34K88fvHJwBeak3I'):
+
         self.split = listify(split)
         self.seed = seed 
 
-        self.__id = "1e6d_V_htqTv9wkZO8F8zjMRZB9tFLbeI"
+        self.__id = id_
         self.__folder = os.path.join(os.path.dirname(__file__),
                                      'Datasets','BrachialPlexus')
         self.__path_images =  self.__folder

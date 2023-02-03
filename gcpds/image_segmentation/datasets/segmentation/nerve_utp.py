@@ -43,11 +43,12 @@ from collections import Counter
 
 class NerveUtp:
     already_unzipped = False
-    def __init__(self, split=[0.2,0.2], seed: int=42):
+    def __init__(self, split=[0.2,0.2], seed: int=42, 
+                        id_: str="1-GWZOz2WZBUiv3Ta5nQp0XNxbmU-1Uv7"):
         self.split = listify(split)
         self.seed = seed 
 
-        self.__id = "1GewZspflKFgN7Clut5Xqr3E3CQLSfoYU"
+        self.__id = id_
         self.__folder = os.path.join(os.path.dirname(__file__),
                                      'Datasets','nerviosUTP')
         self.__path_images =  os.path.join(self.__folder,

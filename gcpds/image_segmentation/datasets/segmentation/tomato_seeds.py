@@ -20,11 +20,12 @@ from sklearn.model_selection import train_test_split
 
 class TomatoSeeds:
     already_unzipped = False
-    def __init__(self, split=[0.2,0.2], seed: int=42):
+    def __init__(self, split=[0.2,0.2], seed: int=42,
+                        id_: str='1J-jjASPC0VtibEj1_2MJ_lnhuP_ltvgY'):
         self.split = listify(split)
         self.seed = seed 
 
-        self.__id = "18G7a1NQ360k7PXk8apYKYvwe7yNHW5Qw"
+        self.__id = id_
         self.__folder = os.path.join(os.path.dirname(__file__),
                                      'Datasets','tomatoSeeds')
         self.__path_images =  os.path.join(self.__folder,
