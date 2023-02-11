@@ -32,7 +32,7 @@ def plot_contour(img: np.ndarray, masks: List[Mask],
     ax :  
         matplotlib ax
     """
-    if np.all(img):
+    if np.any(img):
         ax.imshow(img, cmap=cmap)
     h = []
     l = []
