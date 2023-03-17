@@ -49,21 +49,6 @@ class ZeaMaysSeeds:
         download_from_drive(self.__id, destination_path_zip)
         unzip(destination_path_zip, self.__folder)
 
-    def mask2categorical(Mask: tf.Tensor, labels: dict) -> tf.Tensor:
-        """Pass a certain rgb mask (3-channels) to an image of ordinal classes"""
-        assert type(labels) == dict, "labels variable should be a dictionary"
-
-        X = Mask
-
-        if X.dtype == "float32":
-            X = tf.cast(X*255, dtype="uint8")
-
-        Y = tf.zeros(X.shape[0:2] , dtype="float32")
-        for i, key in enumerate(labels):
-            Y = tf.where(np.all(X == labels[key], axis=-1), i, Y)
-        Y = tf.cast(Y, dtype="uint8")
-        return Y
-
     @staticmethod
     def __preprocessing_mask(mask):
         with open('ZeaMays/labelmap.txt', "r") as FILE:
@@ -81,8 +66,9 @@ class ZeaMaysSeeds:
 
         maskCategorical = tf.zeros(maskRGB.shape[0:2] , dtype="float32")
         for i, key in enumerate(labels):
-            maskCategorical = tf.where(np.all(X == labels[key], axis=-1), i, maskCategorical)
+            maskCategorical = tf.where(np.all(maskRGB == labels[key], axis=-1), i, maskCategorical)
         maskCategorical = tf.cast(maskCategorical, dtype="uint8")
+        
         mask = tf.one_hot(maskCategorical, depth=3)
         mask = maskCategorical.astype(np.float32)
         return mask
