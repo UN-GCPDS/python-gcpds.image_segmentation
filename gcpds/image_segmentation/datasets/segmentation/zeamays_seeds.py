@@ -68,9 +68,9 @@ class ZeaMaysSeeds:
         for i, key in enumerate(labels):
             maskCategorical = tf.where(np.all(maskRGB == labels[key], axis=-1), i, maskCategorical)
         maskCategorical = tf.cast(maskCategorical, dtype="uint8")
-        
+
         mask = tf.one_hot(maskCategorical, depth=3)
-        mask = maskCategorical.astype(np.float32)
+        mask = tf.cast(mask, tf.float32)
         return mask
 
     def load_instance_by_id(self, id_img):
