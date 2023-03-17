@@ -49,17 +49,44 @@ class ZeaMaysSeeds:
         download_from_drive(self.__id, destination_path_zip)
         unzip(destination_path_zip, self.__folder)
 
-    @staticmethod
-    def __preprocessing_mask(mask):
-        mask = mask == 255 
-        seed = mask[...,2] #bgr
-        no_germinate = mask[...,2] & mask[...,1]
-        getminate = mask[...,2] & ~mask[...,1]
+    def mask2categorical(Mask: tf.Tensor, labels: dict) -> tf.Tensor:
+        """Pass a certain rgb mask (3-channels) to an image of ordinal classes"""
+        assert type(labels) == dict, "labels variable should be a dictionary"
 
-        mask = np.concatenate([seed[...,None],
-                               no_germinate[...,None],
-                               getminate[...,None]],
-                               axis=-1)
+        X = Mask
+
+        if X.dtype == "float32":
+            X = tf.cast(X*255, dtype="uint8")
+
+        Y = tf.zeros(X.shape[0:2] , dtype="float32")
+        for i, key in enumerate(labels):
+            Y = tf.where(np.all(X == labels[key], axis=-1), i, Y)
+        Y = tf.cast(Y, dtype="uint8")
+        return Y
+
+    def parse_labelfile(path):
+        """Return a dict with the corresponding rgb mask values of the labels
+            Example:
+            >>> labels = parse_labelfile("file/path")
+            >>> print(labels) 
+            >>> {"label1": (r1, g1, b1), "label2": (r2, g2, b2)} 
+        """
+        with open(path, "r") as FILE:
+            lines = FILE.readlines()
+
+        labels = {x.split(":")[0]: x.split(":")[1] for x in lines[1:]}
+
+        for key in labels:
+            labels[key] = np.array(labels[key].split(",")).astype("uint8")
+
+        return labels
+
+    @staticmethod
+    def __preprocessing_mask(self, mask):
+        labels = self.parse_labelfile('ZeaMays/labelmap.txt')
+        maskRGB = cv2.cvtColor(mask,cv2.COLOR_BGR2RGB)
+        maskCategorical = self.mask2categorical(maskRGB, labels)
+        mask = tf.one_hot(maskCategorical, depth=3)
         mask = mask.astype(np.float32)
         return mask #BGR, B=Seed, G=No Germinate, R=germinate
 
