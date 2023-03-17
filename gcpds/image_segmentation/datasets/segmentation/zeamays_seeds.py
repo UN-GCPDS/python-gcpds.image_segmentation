@@ -64,31 +64,28 @@ class ZeaMaysSeeds:
         Y = tf.cast(Y, dtype="uint8")
         return Y
 
-    def parse_labelfile(path):
-        """Return a dict with the corresponding rgb mask values of the labels
-            Example:
-            >>> labels = parse_labelfile("file/path")
-            >>> print(labels) 
-            >>> {"label1": (r1, g1, b1), "label2": (r2, g2, b2)} 
-        """
-        with open(path, "r") as FILE:
+    @staticmethod
+    def __preprocessing_mask(mask):
+        with open('ZeaMays/labelmap.txt', "r") as FILE:
             lines = FILE.readlines()
 
         labels = {x.split(":")[0]: x.split(":")[1] for x in lines[1:]}
 
         for key in labels:
             labels[key] = np.array(labels[key].split(",")).astype("uint8")
+        assert type(labels) == dict, "labels variable should be a dictionary"
 
-        return labels
-
-    @staticmethod
-    def __preprocessing_mask(self, mask):
-        labels = self.parse_labelfile('ZeaMays/labelmap.txt')
         maskRGB = cv2.cvtColor(mask,cv2.COLOR_BGR2RGB)
-        maskCategorical = self.mask2categorical(maskRGB, labels)
+        if maskRGB.dtype == "float32":
+            maskRGB = tf.cast(maskRGB*255, dtype="uint8")
+
+        maskCategorical = tf.zeros(maskRGB.shape[0:2] , dtype="float32")
+        for i, key in enumerate(labels):
+            maskCategorical = tf.where(np.all(X == labels[key], axis=-1), i, maskCategorical)
+        maskCategorical = tf.cast(maskCategorical, dtype="uint8")
         mask = tf.one_hot(maskCategorical, depth=3)
-        mask = mask.astype(np.float32)
-        return mask #BGR, B=Seed, G=No Germinate, R=germinate
+        mask = maskCategorical.astype(np.float32)
+        return mask
 
     def load_instance_by_id(self, id_img):
         return self.load_instance(id_img)
