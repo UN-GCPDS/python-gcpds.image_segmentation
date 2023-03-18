@@ -24,3 +24,4 @@ Submodules
    image_segmentation.datasets.segmentation.oxford_iiit_pet
    image_segmentation.datasets.segmentation.tomato_seeds
    image_segmentation.datasets.segmentation.ultrasound_nerve_brachial_plexus
+   image_segmentation.datasets.segmentation.zeamays_seeds
