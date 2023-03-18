@@ -16,7 +16,7 @@ class GeneralizedCrossEntropy(Loss):
         haddamard = y_true*y_pred
         haddamard_sum = K.sum(haddamard,axis=[1,2,3]) # batch_size, value
         
-        results = 2 * (1-K.pow(1-haddamard_sum,self.q))/self.q
+        results = 2 * (1-K.pow(haddamard_sum,self.q))/self.q
         return results 
 
     def get_config(self,):
