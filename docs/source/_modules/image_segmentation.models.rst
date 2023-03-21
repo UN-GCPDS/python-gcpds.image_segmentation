@@ -15,3 +15,5 @@ Submodules
    image_segmentation.models.baseline_res_unet
    image_segmentation.models.baseline_segnet
    image_segmentation.models.baseline_unet
+   image_segmentation.models.mobilenetv2_unet
+   image_segmentation.models.vgg16_unet
