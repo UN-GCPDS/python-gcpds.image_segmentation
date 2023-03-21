@@ -2,6 +2,15 @@
 ====================
 Generalized Cross-Entropy
 ====================
+
+
+.. math:: \\frac{1}{H*W}\sum_i^H \sum_j^K \sum_k^C 2\\frac{1- (\mathbf{M}_{i,j,k}* \hat{\mathbf{M}}_{i,j,k})^q}{q}
+
+ 
+.. [1] `Generalized Cross Entropy Loss for Training Deep Neural Networks with Noisy Labels`_
+
+.. _`Generalized Cross Entropy Loss for Training Deep Neural Networks with Noisy Labels`: https://proceedings.neurips.cc/paper_files/paper/2018/file/f2925f97bc13ad2852a7a551802feea0-Paper.pdf
+
 """
 
 from tensorflow.keras.losses import Loss
