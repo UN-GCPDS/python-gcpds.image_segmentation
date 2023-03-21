@@ -4,7 +4,7 @@ Generalized Cross-Entropy
 ====================
 
 
-.. math:: \\frac{1}{H*W}\sum_i^H \sum_j^K \sum_k^C 2\\frac{1- (\mathbf{M}_{i,j,k}* \hat{\mathbf{M}}_{i,j,k})^q}{q}
+.. math:: \\frac{1}{H*W}\sum_i^H \sum_j^W 2\\frac{1- (\sum_k^C\mathbf{M}_{i,j,k}* \hat{\mathbf{M}}_{i,j,k})^q}{q}
 
  
 .. [1] `Generalized Cross Entropy Loss for Training Deep Neural Networks with Noisy Labels`_
