@@ -52,7 +52,7 @@ def get_decoder(skips,dropout=0):
 def unet_mobilenet(input_shape=(128,128,3), out_channels=1, out_ActFunction='sigmoid', trainable = False, name="unetMobile"):
     input = tf.keras.layers.Input(shape=input_shape)
 
-    skips = get_encoder(input_shape=list(x.shape[1:]),  trainable = trainable)(input)
+    skips = get_encoder(input_shape=list(input.shape[1:]),  trainable = trainable)(input)
 
     x = get_decoder(skips, dropout=0)
 
