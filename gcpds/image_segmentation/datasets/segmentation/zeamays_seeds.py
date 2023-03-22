@@ -18,10 +18,11 @@ from sklearn.model_selection import train_test_split
 
 class ZeaMaysSeeds:
     already_unzipped = False
-    def __init__(self, split=[0.2,0.2], seed: int=42,
+    def __init__(self, split=[0.2,0.2], seed: int=42, invert_back_ground_class=True,
                         id_: str='1POAEByzz8cNaiR0qHNwJo2Z6QD-lFUyD'):
         self.split = listify(split)
         self.seed = seed 
+        self.invert_back_ground_class = invert_back_ground_class
 
         self.__id = id_
         self.__folder = os.path.join(os.path.dirname(__file__),
@@ -50,7 +51,7 @@ class ZeaMaysSeeds:
         unzip(destination_path_zip, self.__folder)
 
     @staticmethod
-    def __preprocessing_mask(mask):
+    def __preprocessing_mask(self, mask):
         with open('ZeaMays/labelmap.txt', "r") as FILE:
             lines = FILE.readlines()
 
@@ -70,6 +71,13 @@ class ZeaMaysSeeds:
         maskCategorical = tf.cast(maskCategorical, dtype="uint8")
 
         mask = tf.one_hot(maskCategorical, depth=3)
+
+        if self.invert_back_ground_class == True:
+            back_ground = mask[...,2] == 0
+            back_ground = tf.cast(back_ground, tf.float32)
+            back_ground = tf.expand_dims(back_ground, axis=-1)
+            mask = tf.concat([mask[...,0:2],back_ground], axis=-1) #Ch 1: No germinate, Ch 2: germinate, Ch 3: Background
+
         mask = tf.cast(mask, tf.float32)
         return mask
 
