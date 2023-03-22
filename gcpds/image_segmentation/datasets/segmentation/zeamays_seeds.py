@@ -51,7 +51,7 @@ class ZeaMaysSeeds:
         unzip(destination_path_zip, self.__folder)
 
     @staticmethod
-    def __preprocessing_mask(self, mask):
+    def __preprocessing_mask(mask, invert_back_ground_class):
         with open('ZeaMays/labelmap.txt', "r") as FILE:
             lines = FILE.readlines()
 
@@ -72,7 +72,7 @@ class ZeaMaysSeeds:
 
         mask = tf.one_hot(maskCategorical, depth=3)
 
-        if self.invert_back_ground_class == True:
+        if invert_back_ground_class == True:
             back_ground = mask[...,2] == 0
             back_ground = tf.cast(back_ground, tf.float32)
             back_ground = tf.expand_dims(back_ground, axis=-1)
@@ -89,7 +89,7 @@ class ZeaMaysSeeds:
         path_mask = os.path.join(self.__path_masks,id_img)
         img = cv2.imread(f'{path_img}.jpg')/255
         mask = cv2.imread(f'{path_mask}.png')
-        mask = self.__preprocessing_mask(mask)
+        mask = self.__preprocessing_mask(mask, self.invert_back_ground_class)
         id_image = id_img
         return img, mask, id_image 
 
