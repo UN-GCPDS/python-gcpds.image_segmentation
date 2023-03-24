@@ -33,6 +33,9 @@ class ZeaMaysSeeds:
         self.__path_masks =  os.path.join(self.__folder,
                                             'ZeaMays','SegmentationClass')
 
+        self.__path_labelmap =  os.path.join(self.__folder,
+                                            'ZeaMays','labelmap.txt')
+
         if not ZeaMaysSeeds.already_unzipped:
             self.__set_env()
             ZeaMaysSeeds.already_unzipped = True
@@ -50,9 +53,8 @@ class ZeaMaysSeeds:
         download_from_drive(self.__id, destination_path_zip)
         unzip(destination_path_zip, self.__folder)
 
-    @staticmethod
-    def __preprocessing_mask(mask, invert_back_ground_class):
-        with open('ZeaMays/labelmap.txt', "r") as FILE:
+    def __preprocessing_mask(self, mask):
+        with open(self.__path_labelmap, "r") as FILE:
             lines = FILE.readlines()
 
         labels = {x.split(":")[0]: x.split(":")[1] for x in lines[1:]}
@@ -72,7 +74,7 @@ class ZeaMaysSeeds:
 
         mask = tf.one_hot(maskCategorical, depth=3)
 
-        if invert_back_ground_class == True:
+        if self.invert_back_ground_class == True:
             back_ground = mask[...,2] == 0
             back_ground = tf.cast(back_ground, tf.float32)
             back_ground = tf.expand_dims(back_ground, axis=-1)
@@ -89,7 +91,7 @@ class ZeaMaysSeeds:
         path_mask = os.path.join(self.__path_masks,id_img)
         img = cv2.imread(f'{path_img}.jpg')/255
         mask = cv2.imread(f'{path_mask}.png')
-        mask = self.__preprocessing_mask(mask, self.invert_back_ground_class)
+        mask = self.__preprocessing_mask(mask, )
         id_image = id_img
         return img, mask, id_image 
 
