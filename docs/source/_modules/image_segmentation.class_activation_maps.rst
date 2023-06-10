@@ -5,6 +5,14 @@ image\_segmentation.class\_activation\_maps package
    :undoc-members:
    :members:
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   image_segmentation.class_activation_maps.measures
+
 Submodules
 ----------
 

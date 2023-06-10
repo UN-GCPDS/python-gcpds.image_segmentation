@@ -16,6 +16,7 @@ Navigation
    notebooks/04-metrics
    notebooks/05-models
    notebooks/06-visualizations
+   notebooks/07-interpretability_measures
 
 .. only:: html
 
