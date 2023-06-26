@@ -2,8 +2,8 @@
 .. include:: notebooks/readme.rst
 
 
-Navigation
-==========
+Documentation Overview
+======================
         
 
 .. toctree::
@@ -18,15 +18,18 @@ Navigation
    notebooks/06-visualizations
    notebooks/07-interpretability_measures
 
+
+
+
 .. only:: html
 
-    Docstrings
-    ==========
+    Code Reference
+    ==============
 
     * :ref:`genindex`
     * :ref:`modindex`
     * :ref:`search`
+       
 
-..
-  .. include:: notebooks/footer.rst
+
         
