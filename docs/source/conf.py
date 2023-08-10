@@ -74,3 +74,15 @@ autodoc_mock_imports = [
     'gdown',
     'tensorflow_datasets',
 ]
+
+
+dunderlab_custom_index = f"""
+.. toctree::
+   :glob:
+   :maxdepth: 2
+   :name: mastertoc1
+   :caption: Examples
+
+   notebooks/examples/*
+
+    """

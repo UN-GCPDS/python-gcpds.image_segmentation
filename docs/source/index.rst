@@ -19,6 +19,15 @@ Documentation Overview
    notebooks/07-interpretability_measures
 
 
+.. toctree::
+   :glob:
+   :maxdepth: 2
+   :name: mastertoc1
+   :caption: Examples
+
+   notebooks/examples/*
+
+    
 
 
 .. only:: html
