@@ -21,7 +21,7 @@ from sklearn.model_selection import train_test_split
 class TomatoSeeds:
     already_unzipped = False
     def __init__(self, split=[0.2,0.2], seed: int=42,
-                        id_: str='1J-jjASPC0VtibEj1_2MJ_lnhuP_ltvgY'):
+                        id_: str='14sqbOwzyyAov9-2UnJO3P09Ggk18H876'):
         self.split = listify(split)
         self.seed = seed 
 
