@@ -98,7 +98,7 @@ def res_unet_baseline(input_shape=(128,128,3), name='RES_UNET', out_channels=1, 
 
     d = layers.Conv2D(out_channels, kernel_size=(1, 1), activation=out_ActFunction,name='Output') (c9)
     
-    seg_model = Model(inputs=[input_], outputs=[d])
+    seg_model = Model(inputs=[input_], outputs=[d], name=name)
     
     return seg_model
 
